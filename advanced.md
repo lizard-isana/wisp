@@ -44,8 +44,28 @@ Whisperには、Marked.jsによるレンダリングの前と後、そしてヘ�
 #### pre_rendering_hook(funcion(id,contents){...;return contents})
 ここに登録された命令は、marked.jsでのレンダリングの**前に**実行されます。結果をmarked.jsでレンダリングするために、処理後のコンテンツを`return`で返すのを忘れないでください。
 
+```javascript
+var main = new Wisp("main");
+main.pre_rendering_hook(function(id, contents){
+    // do somthing...
+    return contents
+});
+main.load(["index.md"]);
+```
+
 #### code_highlight_hook(funcion(id,code,lang){...;return contents})
 ここに登録された命令は、marked.jsでのコード("\`\`\`")のレンダリング時に実行されます。処理後のコードを`return`で返すのを忘れないでください。
+
+```javascript
+var main = new Wisp("main");
+main.code_highlight_hook(function(id, code, lang){
+    // do somthing...
+    return code
+});
+main.load(["index.md"]);
+
+
+以下の例は、highlight.jsでのシンタックスハイライトの指定です。
 
 ```javascript
 var main = new Wisp("main");
@@ -60,8 +80,26 @@ main.load(["index.md"]);
 #### post_rendering_hook(funcion(id,contents){...;return contents})
 ここに登録された命令は、marked.jsでのレンダリングが終わり、ブラウザ上に表示される**前に**実行されます。結果をページに表示するために、処理後のコンテンツを`return`で返すのを忘れないでください。
 
+```javascript
+var main = new Wisp("main");
+main.post_rendering_hook(function(id, contents){
+    // do somthing...
+    return contents
+});
+main.load(["index.md"]);
+```
+
 #### post_page_load_hook(funcion(id,contents){...})
 ここに登録された命令は、marked.jsでのレンダリングが終わり、ブラウザ上に表示された**後に**実行されます。処理後のコンテンツを`return`で返しても何も起きません。ページ内のコンテンツを書き換えるためには、明示的に`document.getElementById(id)`を呼ぶ必要があります。
+
+```javascript
+var main = new Wisp("main");
+main.post_page_load_hook(function(id, contents){
+    // do somthing...
+    document.getElementById(id) = contents;
+});
+main.load(["index.md"]);
+```
 
 以下は、MathJaxでの数式表示の指定の例です。MathJaxはデフォルトでは。スクリプトの読み込み時にページ内のLaTeXの記述を探してレンダリングしますが、Wispの場合は動的にページを生成するため、レンダリング終了時にMathJaxの処理を行わないと、数式が正常に表示されません。
 
