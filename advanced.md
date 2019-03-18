@@ -63,7 +63,7 @@ main.code_highlight_hook(function(id, code, lang){
     return code
 });
 main.load(["index.md"]);
-
+```
 
 以下の例は、highlight.jsでのシンタックスハイライトの指定です。
 
