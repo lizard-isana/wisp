@@ -1,0 +1,26 @@
+#header{
+    text-align :right;
+    font-size: small;
+}
+#main{
+    margin:1em auto 1em auto;
+    line-height:1.5em;
+    width: 80%;
+    max-width: -webkit-calc(100% - 150px);
+    max-width: calc(100% - 150px);
+    float: left;
+}
+#sidebar{
+    margin-top: 10px;
+    width: 20%;
+    min-width: 150px;
+    font-size: 14pt;
+    line-height: 2em;
+    float: left;
+}
+#footer{
+    text-align :right;
+    font-style: italic;
+    color: #999999;
+    font-size: small;
+}

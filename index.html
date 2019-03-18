@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="utf-8">
+    <title>Wisp - A Client-side Flat File CMS</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.6.1/marked.min.js"></script>
+    <script src="./js/wisp.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/3.0.1/github-markdown.min.css" />
+    <link rel="stylesheet" href="default.css" />
+</head>
+<body>
+    <div id="header"></div>
+    <div id="sidebar"></div>
+    <div id="main" class="markdown-body"></div>
+    <div id="footer"></div>
+    <script>
+        window.onload = function(){
+            var header = new Wisp("header");
+            header.load(["header.md"]);
+
+            var sidebar = new Wisp("sidebar");
+            sidebar.load(["sidebar.md"]);
+
+            var main = new Wisp("main");
+            main.load(["index.md"]);
+
+            var footer = new Wisp("footer");
+            footer.load(["footer.md"]);
+        }
+    </script>
+</body>
+</html>
