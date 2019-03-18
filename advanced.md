@@ -47,9 +47,24 @@ Whisperには、Marked.jsによるレンダリングの前と後、そしてヘ�
 #### code_highlight_hook(funcion(id,code,lang){...;return contents})
 ここに登録された命令は、marked.jsでのコード("\`\`\`")のレンダリング時に実行されます。処理後のコードを`return`で返すのを忘れないでください。
 
+```javascript
+main.code_highlight_hook(function(id, code, lang){
+    let highlighted_code 
+    highlighted_code = hljs.highlightAuto(code, [lang]).value;
+    return highlighted_code
+});
+```
+
 #### post_rendering_hook(funcion(id,contents){...;return contents})
 ここに登録された命令は、marked.jsでのレンダリングが終わり、ブラウザ上に表示される**前に**実行されます。結果をページに表示するために、処理後のコンテンツを`return`で返すのを忘れないでください。
 
 #### post_page_load_hook(funcion(id,contents){...})
 ここに登録された命令は、marked.jsでのレンダリングが終わり、ブラウザ上に表示された**後に**実行されます。処理後のコンテンツを`return`で返しても何も起きません。ページ内のコンテンツを書き換えるためには、明示的に`document.getElementById(id)`を呼ぶ必要があります。
 
+```javascript
+main.post_page_load_hook(function(id,content){
+    MathJax.Hub.Configured();
+    var html = document.getElementById(id);
+    MathJax.Hub.Queue(["Typeset",MathJax.Hub,html]);
+});
+```
