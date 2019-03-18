@@ -1,7 +1,7 @@
 
 **menu**
 
-[home](./?main=index.md)
+[home](./)
 [basics](./?main=index.md,basics.md)
 [advanced](./enhanced.html??main=advanced.md,sample.md)
 [enhanced](./enhanced.html?main=enhanced.md)
