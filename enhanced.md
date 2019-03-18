@@ -1,11 +1,15 @@
 
-## 拡張機能 enhanced.html
+## 機能拡張版 enhanced.html
 `enhanced.html`では、Wispの拡張機能を使って、あらかじめ以下の機能が追加されています。
 
 - highlight.js によるシンタックスハイライト
 - MathJaxによる数式表示
 - flowchart.jsによるフローチャートの表示
 - js-sequence-diagramsによるシーケンスダイアグラムの表示
+
+ただし、このファイルでは、読み込まれるページが以下のファイルに固定されています。修正する場合は`/js/wisp_enhanced.js`を編集する必要があります。
+
+何をやっているかは、[サンプル](sample.md)のページにソースコードが転機されているので、そちらを参照してください。
 
 ### highlight.js によるシンタックスハイライト
 ```javascript
