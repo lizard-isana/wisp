@@ -48,11 +48,13 @@ Whisperには、Marked.jsによるレンダリングの前と後、そしてヘ�
 ここに登録された命令は、marked.jsでのコード("\`\`\`")のレンダリング時に実行されます。処理後のコードを`return`で返すのを忘れないでください。
 
 ```javascript
+var main = new Wisp("main");
 main.code_highlight_hook(function(id, code, lang){
     let highlighted_code 
     highlighted_code = hljs.highlightAuto(code, [lang]).value;
     return highlighted_code
 });
+main.load(["index.md"]);
 ```
 
 #### post_rendering_hook(funcion(id,contents){...;return contents})
@@ -61,10 +63,14 @@ main.code_highlight_hook(function(id, code, lang){
 #### post_page_load_hook(funcion(id,contents){...})
 ここに登録された命令は、marked.jsでのレンダリングが終わり、ブラウザ上に表示された**後に**実行されます。処理後のコンテンツを`return`で返しても何も起きません。ページ内のコンテンツを書き換えるためには、明示的に`document.getElementById(id)`を呼ぶ必要があります。
 
+以下は、MathJaxでの数式表示の指定の例です。MathJaxはデフォルトでは。スクリプトの読み込み時にページ内のLaTeXの記述を探してレンダリングしますが、Wispの場合は動的にページを生成するため、レンダリング終了時にMathJaxの処理を行わないと、数式が正常に表示されません。
+
 ```javascript
+var main = new Wisp("main");
 main.post_page_load_hook(function(id,content){
     MathJax.Hub.Configured();
     var html = document.getElementById(id);
     MathJax.Hub.Queue(["Typeset",MathJax.Hub,html]);
 });
+main.load(["index.md"]);
 ```
