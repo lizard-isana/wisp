@@ -62,7 +62,7 @@ headfooterer.load("footer.md");
 
 ## URLクエリでのページ読み込み
 
-Wispは、URLクエリでもファイルを任意のHTML要素内に読み込めるので、HTMLファイルが１つあれば、Wikiのような使い方ができます。以下の例では`main`のidで初期化された要素内に`toto.md`を読み込みます。
+Wispは、URLクエリでもファイルを任意のHTML要素内に読み込めるので、HTMLファイルが１つあれば、Wikiのような使い方ができます。以下の例では`main`のidで初期化された要素内に`toto.md`を読み込みます。他の要素は初期化時の状態が保たれます。
 
 [Markdown cheat sheet](./?main=markdown.md)
 
@@ -77,9 +77,9 @@ Wispは、URLクエリでもファイルを任意のHTML要素内に読み込め
 
 ```
 [home](./?main=index.md)
-[basics](./?main=introduction.md,basics.md)
+[basics](./?main=index.md,basics.md)
 [enhanced](./enhanced.html?main=enhanced.md)
-[markdown](./?main=markdown.md)
+[github](https://github.com/lizard-isana/wisp/)
 
 ```
 
