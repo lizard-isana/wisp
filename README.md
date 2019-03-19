@@ -6,9 +6,6 @@
 ## Demo
 https://lizard-isana.github.io/wisp/
 
-## Source Code
-https://github.com/lizard-isana/wisp
-
 ## License
 &copy; 2019 Isana Kashiwai ([MIT license](https://github.com/lizard-isana/wisp/blob/master/LICENSE))
 
@@ -19,7 +16,3 @@ Wisp depend on below libraries
 - [MathJax](https://www.mathjax.org/) ([Apache License 2.0](https://github.com/mathjax/MathJax/blob/master/LICENSE))
 - [flowchart.js](https://flowchart.js.org/) ([MIT License](https://github.com/adrai/flowchart.js/blob/master/license))
 - [js-sequence-diagrams](https://bramp.github.io/js-sequence-diagrams/) ([BSD 2-Clause "Simplified" License](https://github.com/bramp/js-sequence-diagrams/blob/master/LICENCE))
-
-## Administrator
-Isana Kashiwai
-email: isana.k at gmail.com
