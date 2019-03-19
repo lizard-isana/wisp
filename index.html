@@ -3,30 +3,53 @@
 <head>
     <meta charset="utf-8">
     <title>Wisp - A Client-side Flat File CMS</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.6.1/marked.min.js"></script>
     <script src="./js/wisp.js"></script>
+    <script src="./js/wisp_highlight.js"></script>
+    <script src="./js/wisp_mathjax.js"></script>
+    <script src="./js/wisp_flowchart.js"></script>
+    <script src="./js/wisp_sequence_diagram.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/3.0.1/github-markdown.min.css" />
     <link rel="stylesheet" href="default.css" />
 </head>
 <body>
-    <div id="header"></div>
-    <div id="sidebar"></div>
-    <div id="main" class="markdown-body"></div>
-    <div id="footer"></div>
-    <script>
-        window.onload = function(){
-            var header = new Wisp("header");
-            header.load(["header.md"]);
+  <div id="header"></div>
+  <div id="sidebar"></div>
+  <div id="main" class="markdown-body"></div>
+  <div id="footer"></div>
+  <script>
+    // load extentions
+    var wisp_highlight = new WispHighlight();
+    var wisp_math = new WispMathJax();
+    var wisp_chart = new WispFlowChart();
+    var wisp_diagram = new WispSequenceDiagram();
 
-            var sidebar = new Wisp("sidebar");
-            sidebar.load(["sidebar.md"]);
+    window.onload = function(){
+      // init header
+      var header = new Wisp("header");
+      // load header
+      header.load(["header.md"]);
 
-            var main = new Wisp("main");
-            main.load(["index.md"]);
+      // init sidebar
+      var sidebar = new Wisp("sidebar");
+      // load sidebar
+      sidebar.load(["sidebar.md"]);
 
-            var footer = new Wisp("footer");
-            footer.load(["footer.md"]);
-        }
-    </script>
+      // init main
+      var main = new Wisp("main");
+      
+      // append extentions to main
+      wisp_highlight.append(main); 
+      wisp_math.append(main);
+      wisp_chart.append(main);
+      wisp_diagram.append(main);
+      
+      // load main
+      main.load(["index.md"]);
+
+      var footer = new Wisp("footer");
+      footer.load(["footer.md"]);
+    }
+
+  </script>
 </body>
 </html>

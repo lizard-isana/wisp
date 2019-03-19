@@ -1,8 +1,9 @@
 
 **menu**
 
-[home](./)
-[basics](./?main=index.md,basics.md)
-[enhanced](./enhanced.html?main=enhanced.md)
-[advanced](./enhanced.html?main=advanced.md,sample.md)
-[github](https://github.com/lizard-isana/wisp/)
+[HOME](./)
+[基本的な使い方](./?main=basics.md)
+[機能拡張](./?main=extensions.md)
+[高度な使い方](./?main=advanced.md)
+[API](./?main=api.md)
+[GitHub](https://github.com/lizard-isana/wisp/)
