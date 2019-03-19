@@ -1,16 +1,126 @@
 
-## 高度な使い方
+# 高度な使い方
 
-### 初期化オプション
-Wisp()は、第２引数にハッシュ（連想配列）を渡すことでオプションを指定できます。
+## Wispとはなにか？
 
-以下の例は、全てデフォルトの値が指定されています。`var main = new Wisp("main")`としたときと同じ結果になります。
+1. wisp.js を読み込む。
+2. 任意のidを付加した空要素を必要な位置に挿入する。
+3. `Wisp()`を、先に付与したidで初期化。
+4. `load()`メソッドにmarkdownファイル、もしくはファイル名の配列を渡す。
+
+以下は最小構成のWispです。 この例では、`<div id="main"></div>`内に、marked.jsでレンダリングされた `index.md` が展開されます。
+
+```html
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="utf-8">
+    <title>wisp</title>
+    <script src="./lib/wisp.js"></script>
+</head>
+<body>
+<div id="main"></div>
+<script>
+  window.onload = function(){
+    var wisp = new Wisp("main");
+    wisp.load("index.md")
+  }
+</script>
+</body>
+</html>
+```
+
+以下の例では、10秒ごとに`short_update.md`を読み込んで`main`を更新し、60秒ごとに`long_update.md`を更新して`archive`を更新します。
+
+```html
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title>wisp</title>
+  <script src="./lib/wisp.js"></script>
+</head>
+<body>
+  <div id="main"></div>
+  <div id="archive"></div>    
+  <script>
+      window.onload = function(){
+          var main = new Wisp("main");
+          main.load("short_update.md");
+
+          var archive = new Wisp("archive");
+          archive.load("long_update.md");
+
+          var short_updator = window.setInterval(function(){
+              main.load("short_update.md")
+          },10000)
+                      
+          var long_updator = window.setInterval(function(){
+              archive.load("long_update.md")
+          },60000);
+      }
+  </script>
+</body>
+</html>
+```
+
+### 複数ファイルの読み込み
+Wispオブジェクトは複数生成できるので、異なる要素に対して別のファイルを読み込むことができます。また、`loard()`にファイル名の配列を渡すと、複数のファイルを読み込み、結合して表示します。
+
+以下の例は、このサイトと同じ構成です。
+
+```html
+<body>
+    <div id="header"></div>
+    <div id="sidebar"></div>
+    <div id="main"></div>
+    <div id="footer"></div>
+</body>
+```
+
+上のようなHTMLに対して、以下のようなスクリプトを実行すると、それぞれに対して指定されたコンテンツを読み込みます。
 
 ```javascript
-var main = new Wisp("main",{
+var header = new Wisp("header");
+header.load(["header.md"]);
+
+var sidebar = new Wisp("sidebar");
+sidebar.load(["sidebar.md"]);
+
+var main = new Wisp("main");
+main.load(["introduction.md","basics.md"]);
+
+var footer = new Wisp("footer");
+headfooterer.load(["footer.md"]);
+
+```
+
+### URLクエリでのページ読み込み
+
+Wispでの、URLクエリでの指定は、`初期化id=ファイル1,ファイル2...`という形で、初期化時のページ構成を上書きしています。
+
+以下の例は、このサイトのサイドバーの記述の一部です。
+
+```
+[home](./?main=index.md)
+[basics](./?main=introduction.md,basics.md)
+[advanced](./?main=advanced.md,customize.md&sidebar=sidebar_02.md)
+[markdown](./?main=markdown.md)
+
+```
+なお、URLクエリでは別ディレクトリのファイルは指定できないように制限されています。別ディレクトリのファイルを読ませたい場合は、初期化時のオプションでデータディレクトリを指定してください。
+
+
+## 初期化オプション
+Whisper()は、第２引数にハッシュ（連想配列）を渡すことでオプションを指定できます。
+
+以下の例は、全てデフォルトの値が指定されています。`var main = new Wisper("main")`としたときと同じ結果になります。
+
+```javascript
+var main = new Wisper("main",{
     format:"markdown",
     query:true,
-    query_path:"./data/",
+    query_path:"./",
     marked_options:{
       gfm: true,
       tables: true,
@@ -38,77 +148,3 @@ URLクエリで読み込む際に、別のディレクトリから読み込む�
 #### marked_options
 marked.jsの初期化オプションを指定します。ここで指定したオプションはmarked.jsにそのまま渡されます。
 
-### カスタマイズ
-Whisperには、Marked.jsによるレンダリングの前と後、そしてヘージの表示後のタイミングで処理に介入する方法が用意されています。
-
-#### pre_rendering_hook(funcion(id,contents){...;return contents})
-ここに登録された命令は、marked.jsでのレンダリングの**前に**実行されます。結果をmarked.jsでレンダリングするために、処理後のコンテンツを`return`で返すのを忘れないでください。
-
-```javascript
-var main = new Wisp("main");
-main.pre_rendering_hook(function(id, contents){
-    // do somthing...
-    return contents
-});
-main.load(["index.md"]);
-```
-
-#### code_highlight_hook(funcion(id,code,lang){...;return contents})
-ここに登録された命令は、marked.jsでのコード("\`\`\`")のレンダリング時に実行されます。処理後のコードを`return`で返すのを忘れないでください。
-
-```javascript
-var main = new Wisp("main");
-main.code_highlight_hook(function(id, code, lang){
-    // do somthing...
-    return code
-});
-main.load(["index.md"]);
-```
-
-以下の例は、highlight.jsでのシンタックスハイライトの指定です。
-
-```javascript
-var main = new Wisp("main");
-main.code_highlight_hook(function(id, code, lang){
-    let highlighted_code 
-    highlighted_code = hljs.highlightAuto(code, [lang]).value;
-    return highlighted_code
-});
-main.load(["index.md"]);
-```
-
-#### post_rendering_hook(funcion(id,contents){...;return contents})
-ここに登録された命令は、marked.jsでのレンダリングが終わり、ブラウザ上に表示される**前に**実行されます。結果をページに表示するために、処理後のコンテンツを`return`で返すのを忘れないでください。
-
-```javascript
-var main = new Wisp("main");
-main.post_rendering_hook(function(id, contents){
-    // do somthing...
-    return contents
-});
-main.load(["index.md"]);
-```
-
-#### post_page_load_hook(funcion(id,contents){...})
-ここに登録された命令は、marked.jsでのレンダリングが終わり、ブラウザ上に表示された**後に**実行されます。処理後のコンテンツを`return`で返しても何も起きません。ページ内のコンテンツを書き換えるためには、明示的に`document.getElementById(id)`を呼ぶ必要があります。
-
-```javascript
-var main = new Wisp("main");
-main.post_page_load_hook(function(id, contents){
-    // do somthing...
-    document.getElementById(id) = contents;
-});
-main.load(["index.md"]);
-```
-
-以下は、MathJaxでの数式表示の指定の例です。MathJaxはデフォルトでは。スクリプトの読み込み時にページ内のLaTeXの記述を探してレンダリングしますが、Wispの場合は動的にページを生成するため、レンダリング終了時にMathJaxの処理を行わないと、数式が正常に表示されません。
-
-```javascript
-var main = new Wisp("main");
-main.post_page_load_hook(function(id,content){
-    MathJax.Hub.Configured();
-    var html = document.getElementById(id);
-    MathJax.Hub.Queue(["Typeset",MathJax.Hub,html]);
-});
-main.load(["index.md"]);
-```
