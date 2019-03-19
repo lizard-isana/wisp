@@ -5,7 +5,7 @@ Wispは、Markdownで書いたファイルを読み込んでmarked.jsでレン�
 > **wisp** (noun /wɪsp/):
 > a delicate, thin, and sometimes twisting piece or line of something
 
-# Demo Site
+## Demo Site
 https://lizard-isana.github.io/wisp/
 
 ## Source Code
