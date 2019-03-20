@@ -9,7 +9,7 @@ var WispMathJax = WispMathJax || function(){
 
 WispMathJax.prototype = {
     append:function(obj){
-        obj.post_page_load_hook(function(id,content){
+        obj.post_content_load_hook(function(id,content){
             // MathJax
             MathJax.Hub.Configured();
             var html = document.getElementById(id);

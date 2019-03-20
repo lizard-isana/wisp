@@ -18,7 +18,7 @@ var WispFlowChart = WispFlowChart || function(){
 } 
 WispFlowChart.prototype = {
     append:function(obj){
-        obj.post_page_load_hook(function(id,content){
+        obj.post_content_load_hook(function(id,content){
             var unescape_entity = function(str){
                 return str.replace(/&amp;/g, '&')
                             .replace(/&gt;/g, '>')
