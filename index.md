@@ -6,4 +6,4 @@ Welcome to Wisp!
 
 ### H3 level header
 
-[Markdown Cheatsheet](./markdown.md)
+[Markdown Cheatsheet](./?main=markdown.md)
