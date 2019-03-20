@@ -4,5 +4,6 @@ Welcome to Wisp!
 
 ## H2 level header
 
-## H3 level header
+### H3 level header
 
+[Markdown Cheat Sheet](./markdown.md)
