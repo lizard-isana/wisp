@@ -1,4 +1,4 @@
-[Wisp](https://github.com/lizard-isana/wisp/)
+[Wisp](./)
 
 Menu 01
 
