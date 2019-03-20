@@ -4,7 +4,7 @@
 > a delicate, thin, and sometimes twisting piece or line of something
 
 ## Demo
-https://lizard-isana.github.io/wisp/
+http://www.lizard-tail.com/isana/wisp/ (Japanese)
 
 ## License
 &copy; 2019 Isana Kashiwai ([MIT license](https://github.com/lizard-isana/wisp/blob/master/LICENSE))
