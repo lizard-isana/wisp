@@ -1,4 +1,4 @@
-！[logo](./images/logo.svg)
+![](./image/logo.svg)
 
 **table of contents**
 
