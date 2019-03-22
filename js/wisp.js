@@ -190,16 +190,24 @@ Willo.Wisp = Willo.Wisp || function(id,option){
 
         Storage.contents = {};
         var content_list = [];
+        var path = list[0].split("/");
+        if(path.length>1){
+          var tmp_array = path.pop()
+          var default_dir = path.join("/")+"/"
+        }else{
+          var default_dir = "./"
+        }
 
         if(Object.keys(query).length>0){
             for(let key in query){
                 if(key == Storage.element_id){
-                    var content_list = []
+                  var content_list = []
                     var tmp = query[key].split(",");
                     for(let value in tmp){
-                        var target = tmp[value].split("/").reverse()[0]
+                        var target = default_dir+tmp[value].split("/").reverse()[0]
                         content_list.push(target);
                     }
+                    break;
                 }else{
                     content_list = list;
                 }
@@ -207,13 +215,16 @@ Willo.Wisp = Willo.Wisp || function(id,option){
         }else{
             content_list = list;
         }
+
         Willo.Storage.loaded_page_num += content_list.length;
+        Willo.Storage.display_page_num = Willo.Storage.display_page_num  || 0;
         if(content_list.length>0){
             var loader = new ResourceLoader(content_list,Storage.contents,function(data){
                 var page_content = []
                 for(let value in content_list){
                   var content = content_list[value]
                   page_content.push(Storage.contents[content])
+                  Willo.Storage.display_page_num ++;
                 }
                 var merged_page_content = page_content.join("\n")
 
@@ -249,9 +260,6 @@ Willo.Wisp = Willo.Wisp || function(id,option){
                         Storage.PostContentLoadHook[i](Storage.element_id,marked_page_content);
                     }
                 }
-
-                Willo.Storage.display_page_num = Willo.Storage.display_page_num  || 0;
-                Willo.Storage.display_page_num ++;
                 if (Willo.Storage.display_page_num == Willo.Storage.loaded_page_num) {
                   for(const i in Willo.Storage.PostPageLoadHook){
                     Willo.Storage.PostPageLoadHook[i]();
