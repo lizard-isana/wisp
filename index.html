@@ -30,12 +30,12 @@
       // init header
       const header = new Wisp("header");
       // load header
-      header.load(["header.md"]);
+      header.load("header.md");
 
       // init sidebar
       const sidebar = new Wisp("sidebar");
       // load sidebar
-      sidebar.load(["sidebar.md"]);
+      sidebar.load("sidebar.md");
 
       // init main
       const main = new Wisp("main");
@@ -51,10 +51,10 @@
       toc.append(sidebar)
 
       // load main
-      main.load(["index.md"]);
+      main.load("index.md");
 
       const footer = new Wisp("footer");
-      footer.load(["footer.md"]);
+      footer.load("footer.md");
     }
 
   </script>
