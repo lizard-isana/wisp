@@ -128,7 +128,7 @@ index.html?main=sub_page.md
 ## 初期化オプション
 `Wisp()`は、第２引数にハッシュ（連想配列）を渡すことでオプションを指定できます。
 
-以下の例は、全てデフォルトの値が指定されています。`var main = new Wisper("main")`としたときと同じ結果になります。
+以下の例は、全てデフォルトの値が指定されています。`var main = new Wisp("main")`としたときと同じ結果になります。
 
 ```javascript
 var main = new Wisp("main",{
