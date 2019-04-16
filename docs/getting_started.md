@@ -112,25 +112,24 @@ Powered by [Wisp](https://github.com/lizard-isana/wisp/) &copy; Isana Kashiwai
 [markdown.md](markdown.md)
 
 ### 複数ファイル指定
-markdownファイルは複数指定できます。以下の例では、`main`に`index.md`と`basics.md`を結合して表示します。
+markdownファイルは複数指定できます。以下の例では、`main`に`index.md`と`getting_started.md`を結合して表示します。
 
 ```
-[Index & Basics](./?main=index.md,basics.md)
+[Index & Getting Started](./?main=index.md,getting_started.md)
 
 ```
-[Index & Basics](./?main=index.md,basics.md)
+[Index & Getting Started](./?main=index.md,getting_started.md)
 
 ### `main` 以外の領域の指定
 
 main以外の領域を指定することもできます。以下の例では、`main`に`index.md`と`basics.md`を読み込み、`header`に`footer.md`を、`sidebar`に`header.md`を指定して読み込んでいます。逆に、`footer`は何も指定していないので、デフォルトの状態が継承されています。
 
 ```
-[Index & Basics with header & sidebar replaced](./?main=index.md,basics.md&header=footer.md&sidebar=header.md)
+[Index & Getting Started with header & sidebar replaced](./?main=index.md,getting_started.md&header=footer.md&sidebar=header.md)
 
 ```
-[Index & Basics with header & sidebar replaced](./?main=index.md,basics.md&header=footer.md&sidebar=header.md)
+[Index & Getting Started with header & sidebar replaced](./?main=index.md,getting_started.md&header=footer.md&sidebar=header.md)
 
-ちょっとややこしいですが、何が起きているかわかりますか？
 
 ## データファイルの置き場所
 デフォルトでは、データファイルはindex.htmlと同じ場所に置くように設定されています。URLクエリで別ディレクトリを指定しても無視されます。
@@ -168,6 +167,6 @@ sidebar.load("./data/sidebar.md");
 footer.load("./data/footer.md");
 ```
 
-こうすると、たとえば`./?main=basics.md`の指定で`/data/basics.md`を探しに行くようになります。
+こうすると、たとえば`./?main=getting_started.md`の指定で`/data/getting_started.md`を探しに行くようになります。
 
 ここで何をやっているかについては、[Advanced Usage](./?main=advanced.md)を合わせて参照してください。
