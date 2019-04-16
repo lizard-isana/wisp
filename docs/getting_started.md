@@ -23,9 +23,6 @@
 
 ![](./image/default_screen.png)
 
-同じ状態をGitHub Pagesにおいてあるので、必要に応じてそちらを参照してください。
-cf. https://lizard-isana.github.io/wisp/
-
 各エリアのIDと、対応するMarkdownファイルはこんな感じ。
 
 ![](./image/default_screen_annotated.png)
