@@ -2,6 +2,31 @@
 
 Wispは、Markdownで書いたファイルを読み込んで、レンダリングして、表示するだけのシンプルなCMSです。ブラウザ上のJavaScriptだけで動作し、静的なファイルのみで構成されているので、必要なファイルをアップロードするだけで動きます。ローカルにもサーバ側にも何かをインストールしたり、設定したりする必要がありません。
 
+また、URLクエリを使って読み込むファイルを指定できるため、簡易のWikiシステムのようにも使えます。
+
+さらに、プラグインを使うと、MathJaxを使って数式が出せたり、
+
+$ r = \frac{a^2/b}{1 + \epsilon \cos \theta} \tag{1}$$
+
+flowchart.jsでフローチャートが出せたりします。
+
+```flowchart
+st=>start: 開始
+e=>end: 終了
+op1=>operation: 処理
+sub1=>subroutine: サブルーチン
+cond=>condition: 判断
+Yes or No?
+io=>inputoutput: 入力
+para=>parallel: 並行処理
+st->op1->cond
+
+cond(yes)->io->e
+cond(no)->para
+para(path1, bottom)->sub1(right)->op1
+para(path2, top)->op1
+```
+
 > **wisp** (noun /wɪsp/):
 > a delicate, thin, and sometimes twisting piece or line of something
 > *will-o'-the-wisp*
