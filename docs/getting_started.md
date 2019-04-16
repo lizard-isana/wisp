@@ -122,13 +122,13 @@ markdownファイルは複数指定できます。以下の例では、`main`に
 
 ### `main` 以外の領域の指定
 
-main以外の領域を指定することもできます。以下の例では、`main`に`index.md`と`basics.md`を読み込み、`header`に`footer.md`を、`sidebar`に`header.md`を指定して読み込んでいます。逆に、`footer`は何も指定していないので、デフォルトの状態が継承されています。
+main以外の領域を指定することもできます。以下の例では、`main`に`index.md`を読み込み、`header`に`footer.md`を、`sidebar`に`header.md`を指定して読み込んでいます。逆に、`footer`は何も指定していないので、デフォルトの状態が継承されています。
 
 ```
-[Index & Getting Started with header & sidebar replaced](./?main=index.md,getting_started.md&header=footer.md&sidebar=header.md)
+[Header & Sidebar Replaced](./?main=index.md&header=footer.md&sidebar=header.md)
 
 ```
-[Index & Getting Started with header & sidebar replaced](./?main=index.md,getting_started.md&header=footer.md&sidebar=header.md)
+[Header & Sidebar Replaced](./?main=index.md&header=footer.md&sidebar=header.md)
 
 
 ## データファイルの置き場所
