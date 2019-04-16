@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="utf-8">
+    <title>Wisp - A Client-side Flat File CMS</title>
+    <script src="./js/wisp.js"></script>
+    <script src="./js/wisp_highlight.js"></script>
+    <script src="./js/wisp_mathjax.js"></script>
+    <script src="./js/wisp_flowchart.js"></script>
+    <script src="./js/wisp_toc.js"></script>
+    <script src="./js/wisp_sequence_diagram.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/3.0.1/github-markdown.min.css" />
+    <link rel="stylesheet" href="default.css" />
+</head>
+<body>
+  <div id="header"></div>
+  <div id="body">
+      <div id="main" class="markdown-body"></div>
+      <div id="sidebar"></div>
+  </div>
+  <div id="footer"></div>
+  <script>
+    // load extentions
+    const wisp_highlight = new WispHighlight();
+    const wisp_math = new WispMathJax();
+    const wisp_chart = new WispFlowChart();
+    const wisp_diagram = new WispSequenceDiagram();
+
+    window.onload = function(){
+      // init header
+      const header = new Wisp("header");
+      // load header
+      header.load("header.md");
+
+      // init sidebar
+      const sidebar = new Wisp("sidebar");
+      // load sidebar
+      sidebar.load("sidebar.md");
+
+      // init main
+      const main = new Wisp("main");
+      
+      // append extensions to main
+      wisp_highlight.append(main); 
+      wisp_math.append(main);
+      wisp_chart.append(main);
+      wisp_diagram.append(main);
+
+      const toc = new WispToc(main)
+      toc.append(main)
+      toc.append(sidebar)
+
+      // load main
+      main.load("index.md");
+
+      const footer = new Wisp("footer");
+      footer.load("footer.md");
+    }
+
+  </script>
+</body>
+</html>

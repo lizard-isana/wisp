@@ -1,0 +1,108 @@
+
+body {
+    display: flex;
+    flex-direction: column;
+  }
+
+pre,blockquote,code{
+    white-space: pre-wrap;
+}
+
+
+#header{
+    display: flex;
+    justify-content: space-between;
+    background-color: #fff;
+}
+#header a{
+    text-decoration: none;
+    color:#999;
+}
+#header p{
+    cursor: pointer;
+    margin: 0.5em;
+    padding: 5px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+#header a:hover {
+    border-bottom-color: #4EBBE4;
+  }
+
+#body {
+    display: flex;
+    flex: 1;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+#main{
+    width:75%;
+    padding:40px 20px 20px 20px;
+    margin:2em auto 2em auto;
+    line-height:1.5em;
+    border-radius:3px;
+    flex: 0, 0, 80%;
+    flex-basis: auto;
+}
+
+#main img{
+    max-width: 95%;
+    margin: 1em auto;
+    border: 1px solid #bbb;
+}
+
+#sidebar{
+    padding:10px;
+    margin: 2em 1em 0 1em;
+    font-size: 10pt;
+    flex: 1;
+    order: 1;
+}
+
+#sidebar img{
+    width:120px;
+    margin: 0 auto;
+}
+
+#sidebar p{
+    margin-top:1em;
+    margin-left:1em;
+}
+#sidebar .toc{
+    margin:1em;
+    font-size: small;
+    word-wrap : break-word;
+    overflow-wrap : break-word;
+}
+
+#sidebar ul{
+    padding-left: 2em;
+}
+#sidebar li{
+    margin-bottom:0.5em;
+    font-size: small;
+}
+
+
+#sidebar a{
+    cursor: pointer;
+    font-weight: bold;
+    text-decoration: none;
+    color:#bbb;
+
+}
+
+#sidebar a:hover {
+    border-bottom-color: #4EBBE4;
+  }
+
+
+
+#footer{
+    text-align :right;
+    font-style: italic;
+    color: #999999;
+    font-size: small;
+}
