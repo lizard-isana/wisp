@@ -6,7 +6,7 @@ Wispは、Markdownで書いたファイルを読み込んで、レンダリン�
 
 さらに、プラグインを使うと、MathJaxを使って数式が出せたり、
 
-$ r = \frac{a^2/b}{1 + \epsilon \cos \theta} \tag{1}$$
+$$ r = \frac{a^2/b}{1 + \epsilon \cos \theta} \tag{1}$$
 
 flowchart.jsでフローチャートが出せたりします。
 
