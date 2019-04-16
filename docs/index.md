@@ -7,7 +7,7 @@ Wispは、Markdownで書いたファイルを読み込んで、レンダリン�
 > *will-o'-the-wisp*
 
 ちなみに、このデモサイトもWispだけで構築されていて、GitHub Pagesでホストされています。
-cf. https://github.com/lizard-isana/wispd/
+cf. https://github.com/lizard-isana/wisp/tree/master/docs/
 
 ## Source Code
 https://github.com/lizard-isana/wisp
