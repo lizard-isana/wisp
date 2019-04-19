@@ -4,7 +4,6 @@ body {margin:0;}
  font-family: 'Yu Mincho', YuMincho, 'Hiragino Mincho ProN', 'Hiragino Mincho Pro', 'HGP明朝B', serif;
   margin:100px 0 0 0;
 font-feature-settings: 'pkna';
-  font-size: 16px;
   line-height: 1.9;
   letter-spacing: 0.03em;
   writing-mode: vertical-rl;
@@ -20,7 +19,7 @@ font-feature-settings: 'pkna';
   text-orientation: sideways;
 }
 
-#main h1 {
+#main h1{
     font-size:1.2em;
     font-weight:bold;
 }
