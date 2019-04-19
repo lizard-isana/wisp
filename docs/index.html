@@ -9,13 +9,15 @@
     <script src="./js/wisp_flowchart.js"></script>
     <script src="./js/wisp_toc.js"></script>
     <script src="./js/wisp_sequence_diagram.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/3.0.1/github-markdown.min.css" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:300,300italic,400,400italic,700,700italic">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
     <link rel="stylesheet" href="default.css" />
 </head>
 <body>
-  <div id="header"></div>
+  <div id="header" class="navbar"></div>
   <div id="body">
-      <div id="main" class="markdown-body"></div>
+      <div id="main"></div>
       <div id="sidebar"></div>
   </div>
   <div id="footer"></div>
@@ -29,11 +31,31 @@
     window.onload = function(){
       // init header
       const header = new Wisp("header");
+
+      header.post_page_load_hook(function(id, contents){
+        const mobile_menu = document.querySelector(".navbar .menu_icon");
+        mobile_menu.addEventListener('click', function (e) {
+          let menu_items = document.querySelectorAll(".navbar>p,.navbar>ul");
+          for(let i=0, ln=menu_items.length;i<ln;i++){
+              let target = menu_items[i];
+              console.log(target.tagName)
+              if(target.style.display == "block"){
+                target.style.display = "none";
+              }else{
+                target.style.display = "block";
+            }
+          }
+        })
+      })
+
       // load header
+      
       header.load("header.md");
 
+      
       // init sidebar
       const sidebar = new Wisp("sidebar");
+
       // load sidebar
       sidebar.load("sidebar.md");
 
