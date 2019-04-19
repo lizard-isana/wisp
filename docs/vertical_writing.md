@@ -8,10 +8,11 @@ font-feature-settings: 'pkna';
   letter-spacing: 0.03em;
   writing-mode: vertical-rl;
   text-orientation: upright;
-  width: 100%;
+  width: 100vw;
   height: 85%;
   padding: 0;
   column: 100%;
+  column-count:2;
   column-gap: 50px;
   column-rule: 1px dashed #bbb;
 }
