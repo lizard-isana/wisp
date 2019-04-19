@@ -11,8 +11,7 @@ font-feature-settings: 'pkna';
   width: 100vw;
   height: 85%;
   padding: 0;
-  column: 100%;
-  column-count:2;
+  column-width: 20em;
   column-gap: 50px;
   column-rule: 1px dashed #bbb;
 }
