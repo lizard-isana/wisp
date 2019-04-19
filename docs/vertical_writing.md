@@ -40,11 +40,9 @@ hr {
     border: 0;
     color:#333;
     text-align: center;
-    font-size:x-small;
     height: 1.5em;
 }
 hr:after {
-    font-size:large;
     content:"*";
     position: relative;
     display: inline-block;
