@@ -56,14 +56,14 @@ hr:after {
 
 <div style="font-size:small;margin-top:5em;">（極端なレイアウト変更の例として、本文を縦書きで表示させてみます。このレイアウト変更は<span class="sideway">main</span>内に読み込まれた<span class="sideway">virtical_writing.md</span>内に直書きされたCSSのみで実現されています）</div>
 
----
+<div style=“text-align:center”>*</div>
 
 　棄てた一粒の柿の種
 　生えるも生えぬも
 　甘いも渋いも
 　畑の土のよしあし
 
----
+<div style=“text-align:center”>*</div>
 
 　日常生活の世界と詩歌の世界の境界は、ただ一枚のガラス板で仕切られている。
 　このガラスは、初めから曇っていることもある。
@@ -80,7 +80,7 @@ hr:after {
 
 <div style="text-align:right">（大正九年五月、渋柿）</div>
 
----
+<div style=“text-align:center”>*</div>
 
 　宇宙の秘密が知りたくなった、と思うと、いつのまにか自分の手は一塊の土くれをつかんでいた。そうして、ふたつの眼がじいっとそれを見つめていた。
 　すると、土くれの分子の中から星雲が生まれ、その中から星と太陽とが生まれ、アミーバと<ruby><rb>三葉虫</rb><rp>（</rp><rt>さんようちゅう</rt><rp>）</rp></ruby>とアダムとイヴとが生まれ、それからこの自分が生まれて来るのをまざまざと見た。
@@ -94,6 +94,6 @@ hr:after {
 
 <div style="text-align:right">（大正九年八月、渋柿）</div>
 
----
+<div style=“text-align:center”>*</div>
 
 （[寺田寅彦『柿の種』（青空文庫）](https://www.aozora.gr.jp/cards/000042/card1684.html)より抜粋）
