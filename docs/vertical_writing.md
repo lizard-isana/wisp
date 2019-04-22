@@ -53,7 +53,7 @@ hr:after {
 
 # 寺田寅彦『柿の種』（抜粋）
 
-<div style="font-size:small;margin-top:5em;">（極端なレイアウト変更の例として、本文を縦書きで表示させてみます。このレイアウト変更は<span class="sideway">main</span>内に読み込まれた<span class="sideway">virtical_writing.md</span>内に直書きされたCSSのみで実現されています）</div>
+<div style="font-size:small;margin-top:5em;">（極端なレイアウト変更の例として、本文を縦書きで表示させてみます。このレイアウト変更は<span class="sideway">virtical_writing.md</span>内のCSSのみで実現されています）</div>
 
 ---
 
