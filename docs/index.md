@@ -1,6 +1,6 @@
 # Wisp - A Client-side Flat File CMS
 
-Wispは、Markdownで書かかれたファイルを読み込んで、レンダリングして、表示するだけのシンプルなCMSです。ブラウザ上のJavaScriptだけで動作し、静的なファイルのみで構成されているので、必要なファイルをアップロードするだけで動きます。ローカルにもサーバ側にも何かをインストールしたり、設定したりする必要がありません。 [more...](./?main=about.md)
+Wispは、Markdownで書かれたファイルを読み込んで、レンダリングして、表示するだけのシンプルなCMSです。ブラウザ上のJavaScriptだけで動作し、静的なファイルのみで構成されているので、必要なファイルをアップロードするだけで動きます。ローカルにもサーバ側にも何かをインストールしたり、設定したりする必要がありません。 [more...](./?main=about.md)
 
 なお、このデモサイトもWispだけで構築され、GitHub Pagesでホストされています。
 cf. https://github.com/lizard-isana/wisp/tree/master/docs/

@@ -39,7 +39,7 @@ WispFlowChart.prototype = {
                     var chart = flowchart.parse(unescape_entity(code))
                     var chart_option = {}
                     p_node.parentNode.insertBefore(chart_element, p_node);
-                    p_node.parentNode.removeChild(p_node)
+                    p_node.style.display="none";
                     chart.drawSVG(chart_id,chart_option)
                 }
             }

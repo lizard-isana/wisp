@@ -1,11 +1,44 @@
 # Extentions 機能拡張
-Wispにはデフォルトで以下の機能拡張が同包されています（index.htmlでは全てが有効になっています）。
+Wispにはデフォルトで以下の機能拡張が同包されています（同包のindex.htmlでは全てが有効になっています）。
 
+- WispNavBar:ドロップダウンメニューの生成
 - WispToc:ページ内の見出しのリストを表示
 - WispHighlight: highlight.js によるシンタックスハイライト
 - WispMathJax: MathJaxによる数式表示
+- WispChart: c3.jsによるチャート（グラフ）の表示
 - WispFlowChart: flowchart.jsによるフローチャートの表示
 - WispSequenceDiagram: js-sequence-diagramsによるシーケンスダイアグラムの表示
+
+## WispNavBar (wisp_navbar.js)
+指定したエリア内の`<UL>`タグをドロップダウンメニューにまとめます（いわゆる「ハンバーガーメニュー」を生成します）。
+
+### 例
+このサイトで、ヘッダーメニューに使用しています。
+
+`<div id="header">`での指定
+
+```html
+<div id="menu_icon">menu</div>
+
+```
+このサイトでは、Font Awesomeの「[bar](https://fontawesome.com/icons/bars?style=solid)」を読み込んでいます。
+
+`index.html`での指定
+```html
+<script src="./js/wisp_navbar.js">
+<script>
+    const wisp_navbar = new WispNavBar("menu_icon");
+
+    window.onload = function(){
+        const header = new Wisp("header");
+        wisp_navbar.append(header);
+        header.load(["header.md"]);
+        
+        const main = new Wisp("main");
+        main.load(["index.md"]);
+    }
+</script>
+```
 
 
 ## WispToc (wisp_toc.js)
@@ -24,7 +57,8 @@ Wispにはデフォルトで以下の機能拡張が同包されています（i
 
 ```
 
-スクリプト
+`index.html`での指定
+
 ```html
 <script src="./js/wisp_toc.js">
 <script>
@@ -51,32 +85,32 @@ cf. [highlight.js](https://highlightjs.org/)
 ```javascript
 window.onload = function(){
     var header = new Wisp("header");
-    header.load(["header.md"]);
+    header.load("header.md");
 
     var sidebar = new Wisp("sidebar");
-    sidebar.load(["sidebar.md"]);
+    sidebar.load("sidebar.md");
 
     var main = new Wisp("main");
-    main.load(["index.md"]);
+    main.load("index.md");
 
     var footer = new Wisp("footer");
-    footer.load(["footer.md"]);
+    footer.load("footer.md");
 }
 ```
 
     ```javascript
     window.onload = function(){
         var header = new Wisp("header");
-        header.load(["header.md"]);
+        header.load("header.md");
 
         var sidebar = new Wisp("sidebar");
-        sidebar.load(["sidebar.md"]);
+        sidebar.load("sidebar.md");
 
         var main = new Wisp("main");
-        main.load(["index.md"]);
+        main.load("index.md");
 
         var footer = new Wisp("footer");
-        footer.load(["footer.md"]);
+        footer.load("footer.md");
     }
     ```
 
@@ -90,7 +124,7 @@ window.onload = function(){
     window.onload = function(){
         const main = new Wisp("main");
         wisp_highlight(main)
-        main.load(["index.md"]);
+        main.load("index.md");
     }
 </script>
 ```
@@ -145,6 +179,87 @@ $$ M = E-\epsilon \sin E \tag{4}$$
 </script>
 ```
 
+## WispChart (wisp_chart.js)
+
+c3.jsによるチャートの表示。
+cf. [c3.js](https://c3js.org/)
+
+なお、データの中身はValidなJSONである必要があります（たとえば、値はシングルクオートではなくダブルクオートで囲まれていなければなりません）。エラーになる場合（何も表示されない場合）は、 [JSONLint](https://jsonlint.com/)などで、データをチェックしてみてください。
+cf. [JSONLint - The JSON Validator](https://jsonlint.com/)
+
+### 例
+    ```chart
+    {
+        "data": {
+        "columns": [
+            ["data1", 30, 200, 100, 400, 150, 250],
+            ["data2", 50, 20, 10, 40, 15, 25]
+        ]
+        }
+    }
+    ```
+
+
+```chart
+{
+    "data": {
+      "columns": [
+        ["data1", 30, 200, 100, 400, 150, 250],
+        ["data2", 50, 20, 10, 40, 15, 25]
+      ]
+    }
+}
+```
+
+
+    ```chart
+    {
+        data: {
+            columns: [
+                ['data1', 30, 20, 50, 40, 60, 50],
+                ['data2', 200, 130, 90, 240, 130, 220],
+                ['data3', 300, 200, 160, 400, 250, 250],
+                ['data4', 200, 130, 90, 240, 130, 220],
+                ['data5', 130, 120, 150, 140, 160, 150],
+                ['data6', 90, 70, 20, 50, 60, 120],
+            ],
+            type: 'bar',
+            types: {
+                data3: 'spline',
+                data4: 'line',
+                data6: 'area',
+            },
+            groups: [
+                ['data1','data2']
+            ]
+        }
+    }
+    ```
+
+```chart
+{
+    "data": {
+        "columns": [
+            ["data1", 30, 20, 50, 40, 60, 50],
+            ["data2", 200, 130, 90, 240, 130, 220],
+            ["data3", 300, 200, 160, 400, 250, 250],
+            ["data4", 200, 130, 90, 240, 130, 220],
+            ["data5", 130, 120, 150, 140, 160, 150],
+            ["data6", 90, 70, 20, 50, 60, 120]
+        ],
+        "type": "bar",
+        "types": {
+            "data3": "spline",
+            "data4": "line",
+            "data6": "area"
+        },
+        "groups": [
+            ["data1","data2"]
+        ]
+    }
+}
+```
+
 ## WispFlowChart (wisp_flowchart.js)
 flowchart.jsによるフローチャートの表示、
 cf. [flowchart.js](https://flowchart.js.org/)
@@ -194,7 +309,7 @@ cf. [flowchart.js](https://flowchart.js.org/)
     window.onload = function(){
         const main = new Wisp("main");
         wisp_chart(main)
-        main.load(["index.md"]);
+        main.load("index.md");
     }
 </script>
 ```
@@ -231,7 +346,7 @@ D-->>A: Dashed open arrow
     window.onload = function(){
         const main = new Wisp("main");
         wisp_diagram(main)
-        main.load(["index.md"]);
+        main.load("index.md");
     }
 </script>
 ```

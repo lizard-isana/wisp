@@ -6,34 +6,46 @@
     <script src="./js/wisp.js"></script>
     <script src="./js/wisp_highlight.js"></script>
     <script src="./js/wisp_mathjax.js"></script>
+    <script src="./js/wisp_chart.js"></script>
     <script src="./js/wisp_flowchart.js"></script>
     <script src="./js/wisp_toc.js"></script>
+    <script src="./js/wisp_navbar.js"></script>
     <script src="./js/wisp_sequence_diagram.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/3.0.1/github-markdown.min.css" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:300,300italic,400,400italic,700,700italic">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
     <link rel="stylesheet" href="default.css" />
 </head>
 <body>
   <div id="header"></div>
   <div id="body">
-      <div id="main" class="markdown-body"></div>
+      <div id="main"></div>
       <div id="sidebar"></div>
   </div>
   <div id="footer"></div>
+
   <script>
     // load extentions
+    const wisp_navbar = new WispNavBar("menu_icon");
     const wisp_highlight = new WispHighlight();
     const wisp_math = new WispMathJax();
-    const wisp_chart = new WispFlowChart();
+    const wisp_chart = new WispChart();
+    const wisp_flowchart = new WispFlowChart();
     const wisp_diagram = new WispSequenceDiagram();
 
     window.onload = function(){
       // init header
       const header = new Wisp("header");
+
+      // append extensions to header
+      wisp_navbar.append(header);
+
       // load header
       header.load("header.md");
 
       // init sidebar
       const sidebar = new Wisp("sidebar");
+
       // load sidebar
       sidebar.load("sidebar.md");
 
@@ -44,6 +56,7 @@
       wisp_highlight.append(main); 
       wisp_math.append(main);
       wisp_chart.append(main);
+      wisp_flowchart.append(main);
       wisp_diagram.append(main);
 
       const toc = new WispToc(main)

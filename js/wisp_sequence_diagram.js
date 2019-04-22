@@ -43,7 +43,7 @@ WispSequenceDiagram.prototype = {
                     var diagram = Diagram.parse(unescape_entity(code))
                     var diagram_option = {theme: 'simple'}
                     p_node.parentNode.insertBefore(diagram_element, p_node);
-                    p_node.parentNode.removeChild(p_node)
+                    p_node.style.display="none";
                     diagram.drawSVG(diagram_id,diagram_option)
                 }
             }
