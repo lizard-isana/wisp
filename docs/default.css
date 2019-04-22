@@ -220,6 +220,7 @@ pre,code,blockquote{
 /* for navbar */
 #header>ul{
     position:absolute;
+    width:100%;
     top: 30px;
     padding:10px;
     padding-left:1em;
