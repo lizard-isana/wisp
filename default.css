@@ -108,31 +108,28 @@ a:hover{
 
 /* pre, blockquote, code */
 
-pre,code,blockquote{
-    overflow: auto;
-    white-space: pre-wrap;
-    word-wrap: break-word;
-}
-
 #main blockquote{
+    word-wrap: break-word;
     border-left:2px solid #bbb;
 }
 
 #main pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
     background-color: #f6f8fa;
     border-radius: 3px;
     font-size: 85%;
     line-height: 1.45;
     padding: 1em;
     margin-left:1em;
-  }
+}
   
-  #main pre>code {
+#main pre>code {
     background: transparent;
     margin: 0;
     padding: 0;
     line-height: inherit;
-  }
+}
 
 /* main contents table*/
 #main li{
