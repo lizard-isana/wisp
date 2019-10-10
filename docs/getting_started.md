@@ -109,11 +109,11 @@ Powered by [Wisp](https://github.com/lizard-isana/wisp/) &copy; Isana Kashiwai
 markdown ファイルは複数指定できます。以下の例では、`main`に`index.md`と`getting_started.md`を結合して表示します。
 
 ```
-[Index & Getting Started](./?main=index.md,getting_started.md)
+[Index & Getting Started](index.md,getting_started.md)
 
 ```
 
-[Index & Getting Started](./?main=index.md,getting_started.md)
+[Index & Getting Started](index.md,getting_started.md)
 
 ### `main` 以外の領域の指定
 
