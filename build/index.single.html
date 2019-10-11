@@ -1,10 +1,460 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="utf-8">
+  <title>Wisp - A Client-side Flat File CMS</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:300,300italic,400,400italic,700,700italic">
+  <style>
+*, *:before, *:after {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Roboto", sans-serif;
+  font-size: 1em;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  line-height: 1.6;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+}
+
+a:link {
+  color: #6699cc;
+  text-decoration: none;
+}
+
+a:visited {
+  text-decoration: none;
+  color: #778899;
+}
+
+/* page stricture */
+
+#header {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  display: flex;
+}
+
+#body {
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+#main {
+  width: 100%;
+  padding: 20px 20px 20px 20px;
+  margin: 2em auto 2em auto;
+  border-radius: 3px;
+  flex: 0, 0, 80%;
+  flex-basis: auto;
+}
+
+#sidebar {
+  font-size: 12pt;
+  display: block;
+}
+
+#footer {
+  padding-right: 1em;
+}
+
+/* main contents */
+
+#main h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 400;
+  clear: both;
+}
+
+#main h3,
+h4,
+h5,
+h6 {
+  margin-left: 1em;
+  clear: both;
+}
+
+#main h1 {
+  font-weight: 300;
+  font-size: 2.4em;
+}
+
+#main h2 {
+  margin-top: 2em;
+  border-bottom: 1px solid #bbb;
+}
+
+#main h3 {
+  margin-top: 2em;
+  border-bottom: 1px dashed #bbb;
+}
+#main h4 {
+  font-weight: 600;
+  margin-top: 2em;
+}
+
+#main hr {
+  line-height: 3em;
+  position: relative;
+  outline: 0;
+  border: 0;
+  color: #333;
+  text-align: center;
+  height: 3em;
+}
+#main hr:after {
+  content: "*";
+  position: relative;
+  display: inline-block;
+  color: #999;
+  font-size: small;
+  padding: 0 0.5em;
+  line-height: 3em;
+}
+
+#main a[href^="http"]:after {
+  content: "";
+  display: inline-block;
+  width: 0.85em;
+  height: 0.85em;
+  margin-left: 0.25em;
+  color: #bbb;
+  background-image: url("../img/externa_link.svg");
+  background-size: contain;
+  vertical-align: middle;
+}
+
+/* main: p */
+#main p {
+  margin-left: 1em;
+}
+
+.top-left {
+  float: left;
+  margin: 0 10px 10px 1em;
+}
+.top-right {
+  float: right;
+  margin: 0 0 10px 10px;
+}
+
+#main .media {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  max-width: 95%;
+}
+.media iframe {
+  max-width: 100%;
+}
+
+/* main: img */
+#main img {
+  max-width: 95%;
+  margin: 1em auto;
+  border: 1px solid #bbb;
+}
+
+/* pre, blockquote, code */
+
+pre,
+blockquote {
+  overflow: auto;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+#main blockquote {
+  border-left: 2px solid #bbb;
+}
+
+#main code {
+  background-color: #f6f8fa;
+  display: inline-block;
+  font-family: Menlo, Consolas, "DejaVu Sans Mono", monospace;
+  line-height: 1.25;
+}
+
+#main pre {
+  background-color: #f6f8fa;
+  border-radius: 3px;
+  line-height: 1.45;
+  padding: 1em;
+  margin-left: 1em;
+}
+
+#main pre > code {
+  background: transparent;
+  margin: 0;
+  padding: 0;
+}
+
+/* main contents table*/
+#main li {
+  margin: 1em auto;
+}
+
+#main table {
+  display: block;
+  overflow: auto;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+#main table th {
+  font-weight: 600;
+}
+
+#main table td,
+#main table th {
+  border: 1px solid #dfe2e5;
+  padding: 6px 13px;
+}
+
+#main table tr {
+  background-color: #fff;
+  border-top: 1px solid #c6cbd1;
+}
+
+#main table tr:nth-child(2n) {
+  background-color: #f6f8fa;
+}
+
+#main img {
+  background-color: #fff;
+  box-sizing: content-box;
+  max-width: 100%;
+}
+
+#main img[align="right"] {
+  padding-left: 20px;
+}
+
+#main img[align="left"] {
+  padding-right: 20px;
+}
+
+#main .highlight {
+  margin-bottom: 16px;
+}
+
+#main .highlight pre {
+  margin-bottom: 0;
+  word-break: normal;
+}
+
+#main .highlight pre,
+
+
+/* header contents */
+#header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 16px;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+#header h1 {
+  display: inline-block;
+  font-size: 22px;
+  margin-left: 60px;
+}
+
+#header > p {
+  display: none;
+  font-weight: bold;
+}
+
+#header a {
+  text-decoration: none;
+  color: #999;
+}
+
+/* for navbar */
+#header > ul {
+  position: absolute;
+  width: 100%;
+  top: 30px;
+  padding: 10px;
+  padding-left: 1em;
+  z-index: 1000;
+  display: none;
+}
+
+#header > ul > li {
+  border-bottom: 1px solid #bbb;
+}
+
+#header ul {
+  list-style-type: none;
+  font-weight: bold;
+  flex-flow: column;
+  background: rgba(255, 255, 255, 1);
+}
+
+#header li {
+  list-style-type: none;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+#header #menu_icon {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  cursor: pointer;
+}
+
+#header #menu_icon img {
+  width: 30px;
+  height: 30px;
+}
+
+#footer {
+  text-align: right;
+  font-style: italic;
+  color: #999999;
+  font-size: small;
+}
+
+@media screen and (min-width: 768px) {
+  #header > p {
+    display: block;
+  }
+  #main {
+    width: 75%;
+  }
+  #sidebar {
+    display: none;
+    padding: 10px;
+    margin: 2em 1em 0 1em;
+    flex: 1;
+    order: 1;
+  }
+
+  /* sidebar contents */
+
+  #sidebar img {
+    width: 120px;
+    margin: 0 auto;
+  }
+
+  #sidebar p {
+    margin-top: 1em;
+    margin-left: 1em;
+  }
+  #sidebar .toc {
+    margin: 1em;
+    font-size: small;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+  #sidebar ul {
+    padding-left: 2em;
+  }
+
+  #sidebar li {
+    margin-bottom: 0.5em;
+    font-size: small;
+  }
+
+  #sidebar a {
+    cursor: pointer;
+    font-weight: bold;
+    text-decoration: none;
+    color: #bbb;
+  }
+
+  #sidebar a:hover {
+    border-bottom-color: #4ebbe4;
+  }
+}
+  </style>
+</head>
+
+<body>
+  <div id="header"></div>
+  <div id="main"></div>
+  <div id="footer">Powered by <a href="https://github.com/lizard-isana/wisp/">Wisp</a> &copy; Isana Kashiwai</div>
+</body>
+
+<script>
+  window.onload = function () {
+    // load extensions
+    const wisp_navbar = new WispNavBar("menu_icon");
+    const wisp_highlight = new WispHighlight();
+    const wisp_math = new WispMathJax();
+    const wisp_chart = new WispChart();
+    const wisp_flowchart = new WispFlowChart();
+    const wisp_diagram = new WispSequenceDiagram();
+  
+    // init header
+    const header = new Wisp("header");
+  
+    // append extensions to header
+    wisp_navbar.append(header);
+  
+    // load header
+    header.load("header.md");
+  
+    // init main
+    const main = new Wisp("main");
+    main.post_content_load_hook(function(id,content){
+        var h1 = document.querySelectorAll(`#${id} h1`)
+        if(h1.length>0){
+          document.title = h1[0].textContent + " | " + document.title;
+        }
+
+        var link = document.querySelectorAll('a[href^="http"]')
+        for (var i=0,ln=link.length; i<ln; i++){
+          link[i].target ="_blank"
+        }
+      });
+
+    // append extensions to main
+    wisp_highlight.append(main);
+    wisp_math.append(main);
+    wisp_chart.append(main);
+    wisp_flowchart.append(main);
+    wisp_diagram.append(main);
+  
+    const toc = new WispToc(main)
+    toc.append(main)
+  
+    // load main
+    main.load("index.md");
+  
+
+    
+    // init footer
+    const footer = new Wisp("footer");
+    // load footer
+    footer.load("footer.md");
+  }
+  
+
+
 /**
  * wisp - a client-side flat file CMS
  * Copyright (c) 2019, Isana Kashiwai. (MIT Licensed)
  * https://github.com/lizard-isana/wisp
  */
-
-var Willo = Willo || {}
+ var Willo = Willo || {}
 
 Willo.Storage = {};
 Willo.Storage.loaded_page_num = Willo.Storage.loaded_page_num || 0;
@@ -99,6 +549,7 @@ Willo.QueryDecoder = function () {
 
 
 Willo.Wisp = Willo.Wisp || function (id, option) {
+
   var Storage = {}
 
   var ResourceLoader = function (array, storage, callback) {
@@ -125,16 +576,13 @@ Willo.Wisp = Willo.Wisp || function (id, option) {
     }
   }
 
-  var Initialize = function (id,option) {
-    Storage.renderer = Storage.renderer || {};
+  var Initialize = function (option) {
+
     Storage.format = "markdown";
     Storage.permit_query = true;
     Storage.query_path = "./";
-    Storage.renderer = new marked.Renderer();
-    Storage.inner_link_target = id;
-    Storage.new_window = true;
     Storage.marked_options = {
-      renderer: Storage.renderer,
+      renderer: new marked.Renderer(),
       gfm: true,
       tables: true,
       breaks: true,
@@ -157,9 +605,6 @@ Willo.Wisp = Willo.Wisp || function (id, option) {
       };
       if (option.marked_options) {
         Storage.marked_options = option.marked_options;
-      };
-      if (option.inner_link_target) {
-        Storage.inner_link_target = option.inner_link_target;
       };
     }
     marked.setOptions(Storage.marked_options);
@@ -259,16 +704,7 @@ Willo.Wisp = Willo.Wisp || function (id, option) {
               marked_page_content = Storage.PostRenderingHook[i](Storage.element_id, marked_page_content);
             }
           }
-          var element = document.getElementById(Storage.element_id);
-          element.innerHTML = marked_page_content;
-          
-          var link = element.querySelectorAll("a");
-          for (var i = 0, ln = link.length; i < ln; i++) {
-            var href = link[i].getAttribute("href");
-            if (href.match(/^(?!http(|s))/) && href.match(/^(?!.*(\/|=)).*/)) {
-                link[i].href = "?"+Storage.inner_link_target+"=" + href;
-            }
-          }
+          document.getElementById(Storage.element_id).innerHTML = marked_page_content;
         }
         if (Storage.PostContentLoadHook.length > 0) {
           for (const i in Storage.PostContentLoadHook) {
@@ -283,7 +719,7 @@ Willo.Wisp = Willo.Wisp || function (id, option) {
       })
     }
   }
-  Initialize(id,option)
+  Initialize(option)
 }
 
 Willo.Wisp.prototype = {
@@ -316,6 +752,266 @@ Willo.Wisp.prototype = {
 }
 
 var Wisp = Willo.Wisp
+
+// WispNavBar
+var WispNavBar = WispNavBar || function (target) {
+  this.target = target;
+}
+WispNavBar.prototype = {
+  append: function (obj) {
+    obj.menu_target = this.target;
+    obj.post_content_load_hook(function (id, contents) {
+      const wrapper = document.getElementById(id);
+      const menu_target = document.getElementById(obj.menu_target);
+      console.log(obj.menu_target)
+      menu_target.addEventListener('click', function (e) {
+        let menu_items = wrapper.querySelectorAll("ul");
+        for (let i = 0, ln = menu_items.length; i < ln; i++) {
+          let target = menu_items[i];
+          if (target.style.display == "block") {
+            target.style.display = "none";
+          } else {
+            target.style.display = "block";
+          }
+        }
+      })
+    })
+  }
+}
+
+// WispToc
+var WispToc = function (obj) {
+  Willo.Storage[obj.id] = {}
+  this.storage = {}
+  obj.post_content_load_hook(function (id, content) {
+    var header_array = document.querySelectorAll(`#${obj.id} h2`)
+    var toc_str_array = []
+    toc_str_array.push(`<ul>\n`)
+    for (const i in header_array) {
+      if (header_array[i].id) {
+        var str = `<li><a href="#${header_array[i].id}">${header_array[i].textContent}</a></li>`
+        toc_str_array.push(str)
+      }
+    }
+    toc_str_array.push(`</ul>\n`)
+    var toc = toc_str_array.join("\n")
+    obj.toc = toc
+  })
+  this.owner = obj;
+}
+
+WispToc.prototype = {
+  append: function (obj) {
+    obj.toc_owner = this.owner
+    obj.post_page_load_hook(function () {
+      const toc_array = document.getElementById(obj.id).getElementsByClassName("toc");
+      for (const i in toc_array) {
+        toc_array[i].innerHTML = obj.toc_owner.toc;
+      }
+    });
+  }
+}
+
+// WispHighlight
+var WispHighlight = WispHighlight || function (id, option) {
+  const script = document.createElement('script');
+  script.src = 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js';
+  document.getElementsByTagName("head")[0].appendChild(script);
+
+  const link = document.createElement('link');
+  link.href = 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css';
+  link.rel = 'stylesheet'
+  document.getElementsByTagName("head")[0].appendChild(link);
+}
+
+WispHighlight.prototype = {
+  append: function (obj) {
+    obj.code_highlight_hook(function (id, code, lang) {
+      let highlighted_code
+      highlighted_code = hljs.highlightAuto(code, [lang]).value;
+      return highlighted_code
+    });
+  }
+}
+
+// WispMathJax
+var WispMathJax = WispMathJax || function () {
+  const script_mathjax_config = document.createElement('script');
+  script_mathjax_config.type = 'text/x-mathjax-config';
+  document.getElementsByTagName("head")[0].appendChild(script_mathjax_config);
+  const script_mathjax_main = document.createElement('script');
+  script_mathjax_main.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML&delayStartupUntil=configured';
+  document.getElementsByTagName("head")[0].appendChild(script_mathjax_main);
+}
+
+WispMathJax.prototype = {
+  append: function (obj) {
+    obj.post_content_load_hook(function (id, content) {
+      // MathJax
+      MathJax.Hub.Configured();
+      var html = document.getElementById(id);
+      MathJax.Hub.Queue(["Typeset", MathJax.Hub, html]);
+    });
+  }
+}
+
+
+// WispChart
+var WispChart = WispChart || function () {
+  var scripts = [
+    "https://cdnjs.cloudflare.com/ajax/libs/c3/0.7.0/c3.min.js",
+    "https://cdnjs.cloudflare.com/ajax/libs/d3/5.9.2/d3.min.js"
+  ]
+  var len = scripts.length;
+  var i = 0;
+  function appendScript() {
+    var script = document.createElement('script');
+    script.src = scripts[i];
+    document.getElementsByTagName("head")[0].appendChild(script);
+    i++
+    if (i < len) {
+      script.onload = appendScript;
+    }
+  };
+  appendScript()
+  const link = document.createElement('link');
+  link.href = "https://cdnjs.cloudflare.com/ajax/libs/c3/0.7.0/c3.min.css";
+  link.rel = 'stylesheet'
+  document.getElementsByTagName("head")[0].appendChild(link);
+}
+WispChart.prototype = {
+  append: function (obj) {
+    obj.post_content_load_hook(function (id, content) {
+      var chart_array = document.getElementsByClassName("language-chart")
+      var code_array = []
+      for (var num = 0, ln = chart_array.length; num < ln; num++) {
+        var code_element = chart_array[num];
+        var p_node = code_element.parentNode;
+        var code = JSON.parse(code_element.innerHTML);
+        var chart_id = "chart_" + num;
+        var chart_element = document.createElement('div');
+        chart_element.setAttribute("id", chart_id)
+        chart_element.setAttribute("class", "chart")
+        chart_element.style.width = "90%";
+        chart_element.style.padding = "0";
+        chart_element.style.margin = "0";
+        p_node.parentNode.insertBefore(chart_element, p_node);
+        p_node.style.display = "none";
+        code.bindto = "#" + chart_id;
+        code_array.push()
+        if (code) {
+          var chart = c3.generate(code)
+        }
+      }
+    });
+  }
+}
+
+// WispFlowChart
+var WispFlowChart = WispFlowChart || function () {
+  var scripts = [
+    "https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js",
+    "https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.11.3/flowchart.min.js"
+  ]
+  var len = scripts.length;
+  var i = 0;
+  function appendScript() {
+    var script = document.createElement('script');
+    script.src = scripts[i];
+    document.getElementsByTagName("head")[0].appendChild(script);
+    i++
+    if (i < len) {
+      script.onload = appendScript;
+    }
+  };
+  appendScript()
+}
+
+WispFlowChart.prototype = {
+  append: function (obj) {
+    obj.post_content_load_hook(function (id, content) {
+      var unescape_entity = function (str) {
+        return str.replace(/&amp;/g, '&')
+          .replace(/&gt;/g, '>')
+          .replace(/&lt;/g, '<')
+          .replace(/&quot;/g, '\"')
+          .replace(/&#039;/g, '\'')
+      }
+      var chart_array = document.getElementsByClassName("language-flowchart")
+      for (var num in chart_array) {
+        var code_element = chart_array[num];
+        var p_node = code_element.parentNode;
+        var code = code_element.innerHTML
+        var chart_id = "flowchart_" + num;
+        var chart_element = document.createElement('div');
+        chart_element.setAttribute("id", chart_id)
+        chart_element.setAttribute("class", "flowchart")
+        if (code) {
+          var chart = flowchart.parse(unescape_entity(code))
+          var chart_option = {}
+          p_node.parentNode.insertBefore(chart_element, p_node);
+          p_node.style.display = "none";
+          chart.drawSVG(chart_id, chart_option)
+        }
+      }
+    });
+  }
+}
+
+// WispSequenceDiagram
+var WispSequenceDiagram = WispSequenceDiagram || function () {
+  const scripts = [
+    "https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js",
+    "https://cdnjs.cloudflare.com/ajax/libs/webfont/1.6.28/webfontloader.js",
+    "https://cdnjs.cloudflare.com/ajax/libs/snap.svg/0.5.1/snap.svg-min.js",
+    "https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.1/underscore-min.js",
+    "https://cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.6/sequence-diagram-min.js"
+  ]
+  var len = scripts.length;
+  var i = 0;
+  function appendScript() {
+    var script = document.createElement('script');
+    script.src = scripts[i];
+    document.getElementsByTagName("head")[0].appendChild(script);
+    i++
+    if (i < len) {
+      script.onload = appendScript;
+    }
+  };
+  appendScript()
+}
+
+WispSequenceDiagram.prototype = {
+  append: function (obj) {
+    obj.post_content_load_hook(function (id, content) {
+      var unescape_entity = function (str) {
+        return str.replace(/&amp;/g, '&')
+          .replace(/&gt;/g, '>')
+          .replace(/&lt;/g, '<')
+          .replace(/&quot;/g, '\"')
+          .replace(/&#039;/g, '\'')
+      }
+      var diagram_array = document.getElementsByClassName("language-sequence-diagram")
+      for (var num in diagram_array) {
+        var code_element = diagram_array[num];
+        var p_node = code_element.parentNode;
+        var code = code_element.innerHTML
+        var diagram_id = "sequence-diagram_" + num;
+        var diagram_element = document.createElement('div');
+        diagram_element.setAttribute("id", diagram_id)
+        diagram_element.setAttribute("class", "sequence-diagram")
+        if (code) {
+          var diagram = Diagram.parse(unescape_entity(code))
+          var diagram_option = { theme: 'simple' }
+          p_node.parentNode.insertBefore(diagram_element, p_node);
+          p_node.style.display = "none";
+          diagram.drawSVG(diagram_id, diagram_option)
+        }
+      }
+    });
+  }
+}
+
 
 /**
  * marked - a markdown parser
@@ -2007,3 +2703,7 @@ var Wisp = Willo.Wisp
       root.marked = marked;
     }
     })(this || (typeof window !== 'undefined' ? window : global));
+
+  </script>
+
+</html>

@@ -1,75 +1,69 @@
 <!DOCTYPE html>
 <html lang="ja">
-<head>
-    <meta charset="utf-8">
+  <head>
+    <meta charset="utf-8" />
     <title>Wisp - A Client-side Flat File CMS</title>
-    <script src="./js/wisp.js"></script>
-    <script src="./js/wisp_highlight.js"></script>
-    <script src="./js/wisp_mathjax.js"></script>
-    <script src="./js/wisp_chart.js"></script>
-    <script src="./js/wisp_flowchart.js"></script>
-    <script src="./js/wisp_toc.js"></script>
-    <script src="./js/wisp_navbar.js"></script>
-    <script src="./js/wisp_sequence_diagram.js"></script>
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:300,300italic,400,400italic,700,700italic">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
-    <link rel="stylesheet" href="default.css" />
-</head>
-<body>
-  <div id="header"></div>
-  <div id="body">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="//fonts.googleapis.com/css?family=Roboto:300,300italic,400,400italic,700,700italic"
+    />
+    <script src="./assets/js/wisp.js"></script>
+    <link rel="stylesheet" href="./assets/css/default.css" />
+  </head>
+  <body>
+    <div id="header"></div>
+    <div id="body">
       <div id="main"></div>
       <div id="sidebar"></div>
-  </div>
-  <div id="footer"></div>
+    </div>
+    <div id="footer"></div>
 
-  <script>
-    // load extentions
-    const wisp_navbar = new WispNavBar("menu_icon");
-    const wisp_highlight = new WispHighlight();
-    const wisp_math = new WispMathJax();
-    const wisp_chart = new WispChart();
-    const wisp_flowchart = new WispFlowChart();
-    const wisp_diagram = new WispSequenceDiagram();
+    <script>
+      // load extentions
+      const wisp_navbar = new WispNavBar("menu_icon");
+      const wisp_highlight = new WispHighlight();
+      const wisp_math = new WispMathJax();
+      const wisp_chart = new WispChart();
+      const wisp_flowchart = new WispFlowChart();
+      const wisp_diagram = new WispSequenceDiagram();
 
-    window.onload = function(){
-      // init header
-      const header = new Wisp("header");
+      window.onload = function() {
+        // init header
+        const header = new Wisp("header");
 
-      // append extensions to header
-      wisp_navbar.append(header);
+        // append extensions to header
+        wisp_navbar.append(header);
 
-      // load header
-      header.load("header.md");
+        // load header
+        header.load("header.md");
 
-      // init sidebar
-      const sidebar = new Wisp("sidebar");
+        // init sidebar
+        const sidebar = new Wisp("sidebar");
 
-      // load sidebar
-      sidebar.load("sidebar.md");
+        // load sidebar
+        sidebar.load("sidebar.md");
 
-      // init main
-      const main = new Wisp("main");
-      
-      // append extensions to main
-      wisp_highlight.append(main); 
-      wisp_math.append(main);
-      wisp_chart.append(main);
-      wisp_flowchart.append(main);
-      wisp_diagram.append(main);
+        // init main
+        const main = new Wisp("main");
 
-      const toc = new WispToc(main)
-      toc.append(main)
-      toc.append(sidebar)
+        // append extensions to main
+        wisp_highlight.append(main);
+        wisp_math.append(main);
+        wisp_chart.append(main);
+        wisp_flowchart.append(main);
+        wisp_diagram.append(main);
 
-      // load main
-      main.load("index.md");
+        const toc = new WispToc(main);
+        toc.append(main);
+        toc.append(sidebar);
 
-      const footer = new Wisp("footer");
-      footer.load("footer.md");
-    }
+        // load main
+        main.load("index.md");
 
-  </script>
-</body>
+        const footer = new Wisp("footer");
+        footer.load("footer.md");
+      };
+    </script>
+  </body>
 </html>

@@ -1,0 +1,34 @@
+{
+  "name": "wisp",
+  "version": "0.0.1",
+  "description": "A Client-side Flat File CMS",
+  "main": "gulpfile.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lizard-isana/wisp.git"
+  },
+  "author": "KASHIWAI, Isana",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lizard-isana/wisp/issues"
+  },
+  "homepage": "https://github.com/lizard-isana/wisp#readme",
+  "devDependencies": {
+    "@babel/core": "^7.6.4",
+    "@babel/preset-env": "^7.6.3",
+    "babel": "^6.23.0",
+    "babel-cli": "^6.26.0",
+    "gulp": "^4.0.2",
+    "gulp-babel": "^8.0.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-rename": "^1.4.0",
+    "gulp-uglify": "^3.0.2",
+    "uglify-es": "^3.3.9"
+  }
+}
