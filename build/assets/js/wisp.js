@@ -1,472 +1,10 @@
-<!DOCTYPE html>
-<html lang="ja">
-
-<head>
-  <meta charset="utf-8">
-  <title>Wisp - A Client-side Flat File CMS</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:300,300italic,400,400italic,700,700italic">
-  <style>
-*,
-*:before,
-*:after {
-  box-sizing: border-box;
-}
-
-body {
-  font-family: "Roboto", sans-serif;
-  font-size: 1em;
-  font-weight: 400;
-  letter-spacing: 0.01em;
-  line-height: 1.6;
-  display: flex;
-  flex-direction: column;
-  margin: 0;
-}
-
-a:link {
-  color: #6699cc;
-  text-decoration: none;
-}
-
-a:visited {
-  text-decoration: none;
-  color: #778899;
-}
-
-a:active {
-  text-decoration: none;
-  color: #6699cc;
-}
-
-a:hover {
-  text-decoration: none;
-  color: #6699cc;
-}
-
-/* page stracture */
-
-#header {
-  position: absolute;
-  top: 0;
-  width: 100%;
-  display: flex;
-}
-
-#body {
-  display: flex;
-  flex: 1;
-  flex-direction: row;
-  justify-content: space-between;
-}
-
-#main {
-  width: 100%;
-  padding: 20px 20px 20px 20px;
-  margin: 2em auto 2em auto;
-  border-radius: 3px;
-  flex: 0, 0, 80%;
-  flex-basis: auto;
-}
-
-#sidebar {
-  font-size: 12pt;
-  display: block;
-}
-
-#footer {
-  padding-right: 1em;
-}
-
-/* main contents */
-
-#main h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-weight: 400;
-  clear: both;
-}
-
-#main h3,
-h4,
-h5,
-h6 {
-  margin-left: 1em;
-  clear: both;
-}
-
-#main h1 {
-  font-weight: 300;
-  font-size: 2.4em;
-}
-
-#main h2 {
-  margin-top: 2em;
-  border-bottom: 1px solid #bbb;
-}
-
-#main h3 {
-  margin-top: 2em;
-  border-bottom: 1px dashed #bbb;
-}
-#main h4 {
-  font-weight: 600;
-  margin-top: 2em;
-}
-
-#main hr {
-  line-height: 3em;
-  position: relative;
-  outline: 0;
-  border: 0;
-  color: #333;
-  text-align: center;
-  height: 3em;
-}
-#main hr:after {
-  content: "*";
-  position: relative;
-  display: inline-block;
-  color: #999;
-  font-size: small;
-  padding: 0 0.5em;
-  line-height: 3em;
-}
-
-#main a[href^="http"]:after {
-  content: "";
-  display: inline-block;
-  width: 0.85em;
-  height: 0.85em;
-  margin-left: 0.25em;
-  color: #bbb;
-  background-image: url("../img/externa_link.svg");
-  background-size: contain;
-  vertical-align: middle;
-}
-
-/* main: p */
-#main p {
-  margin-left: 1em;
-}
-
-.top-left {
-  float: left;
-  margin: 0 10px 10px 1em;
-}
-.top-right {
-  float: right;
-  margin: 0 0 10px 10px;
-}
-
-#main .media {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  max-width: 95%;
-}
-.media iframe {
-  max-width: 100%;
-}
-
-/* main: img */
-#main img {
-  max-width: 95%;
-  margin: 1em auto;
-  border: 1px solid #bbb;
-}
-
-/* pre, blockquote, code */
-
-pre,
-blockquote {
-  overflow: auto;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-}
-
-#main blockquote {
-  border-left: 2px solid #bbb;
-}
-
-#main code {
-  background-color: #f6f8fa;
-  display: inline-block;
-  font-family: Menlo, Consolas, "DejaVu Sans Mono", monospace;
-  line-height: 1.25;
-}
-
-#main pre {
-  background-color: #f6f8fa;
-  border-radius: 3px;
-  line-height: 1.45;
-  padding: 1em;
-  margin-left: 1em;
-}
-
-#main pre > code {
-  background: transparent;
-  margin: 0;
-  padding: 0;
-}
-
-/* main contents table*/
-#main li {
-  margin: 1em auto;
-}
-
-#main table {
-  display: block;
-  overflow: auto;
-  width: 100%;
-  border-collapse: collapse;
-}
-
-#main table th {
-  font-weight: 600;
-}
-
-#main table td,
-#main table th {
-  border: 1px solid #dfe2e5;
-  padding: 6px 13px;
-}
-
-#main table tr {
-  background-color: #fff;
-  border-top: 1px solid #c6cbd1;
-}
-
-#main table tr:nth-child(2n) {
-  background-color: #f6f8fa;
-}
-
-#main img {
-  background-color: #fff;
-  box-sizing: content-box;
-  max-width: 100%;
-}
-
-#main img[align="right"] {
-  padding-left: 20px;
-}
-
-#main img[align="left"] {
-  padding-right: 20px;
-}
-
-#main .highlight {
-  margin-bottom: 16px;
-}
-
-#main .highlight pre {
-  margin-bottom: 0;
-  word-break: normal;
-}
-
-#main .highlight pre,
-
-
-/* header contents */
-#header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 16px;
-  background: rgba(255, 255, 255, 0.9);
-}
-
-#header h1 {
-  display: inline-block;
-  font-size: 22px;
-  margin-left: 60px;
-}
-
-#header > p {
-  display: none;
-  font-weight: bold;
-}
-
-#header a {
-  text-decoration: none;
-  color: #999;
-}
-
-/* for navbar */
-#header > ul {
-  position: absolute;
-  width: 100%;
-  top: 30px;
-  padding: 10px;
-  padding-left: 1em;
-  z-index: 1000;
-  display: none;
-}
-
-#header > ul > li {
-  border-bottom: 1px solid #bbb;
-}
-
-#header ul {
-  list-style-type: none;
-  font-weight: bold;
-  flex-flow: column;
-  background: rgba(255, 255, 255, 1);
-}
-
-#header li {
-  list-style-type: none;
-  font-weight: bold;
-  margin-top: 10px;
-}
-
-#header #menu_icon {
-  position: absolute;
-  top: 15px;
-  left: 15px;
-  cursor: pointer;
-}
-
-#header #menu_icon img {
-  width: 30px;
-  height: 30px;
-}
-
-#footer {
-  text-align: right;
-  font-style: italic;
-  color: #999999;
-  font-size: small;
-}
-
-@media screen and (min-width: 768px) {
-  #header > p {
-    display: block;
-  }
-  #main {
-    width: 75%;
-  }
-  #sidebar {
-    display: none;
-    padding: 10px;
-    margin: 2em 1em 0 1em;
-    flex: 1;
-    order: 1;
-  }
-
-  /* sidebar contents */
-
-  #sidebar img {
-    width: 120px;
-    margin: 0 auto;
-  }
-
-  #sidebar p {
-    margin-top: 1em;
-    margin-left: 1em;
-  }
-  #sidebar .toc {
-    margin: 1em;
-    font-size: small;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-  }
-
-  #sidebar ul {
-    padding-left: 2em;
-  }
-
-  #sidebar li {
-    margin-bottom: 0.5em;
-    font-size: small;
-  }
-
-  #sidebar a {
-    cursor: pointer;
-    font-weight: bold;
-    text-decoration: none;
-    color: #bbb;
-  }
-
-  #sidebar a:hover {
-    border-bottom-color: #4ebbe4;
-  }
-}
-  </style>
-</head>
-
-<body>
-  <div id="header"></div>
-  <div id="main"></div>
-  <div id="footer">Powered by <a href="https://github.com/lizard-isana/wisp/">Wisp</a> &copy; Isana Kashiwai</div>
-</body>
-
-<script>
-  window.onload = function () {
-    // load extensions
-    const wisp_navbar = new WispNavBar("menu_icon");
-    const wisp_highlight = new WispHighlight();
-    const wisp_math = new WispMathJax();
-    const wisp_chart = new WispChart();
-    const wisp_flowchart = new WispFlowChart();
-    const wisp_diagram = new WispSequenceDiagram();
-  
-    // init header
-    const header = new Wisp("header");
-  
-    // append extensions to header
-    wisp_navbar.append(header);
-  
-    // load header
-    header.load("header.md");
-  
-    // init main
-    const main = new Wisp("main");
-    main.post_content_load_hook(function(id,content){
-        var h1 = document.querySelectorAll(`#${id} h1`)
-        if(h1.length>0){
-          document.title = h1[0].textContent + " | " + document.title;
-        }
-
-        var link = document.querySelectorAll('a[href^="http"]')
-        for (var i=0,ln=link.length; i<ln; i++){
-          link[i].target ="_blank"
-        }
-      });
-
-    // append extensions to main
-    wisp_highlight.append(main);
-    wisp_math.append(main);
-    wisp_chart.append(main);
-    wisp_flowchart.append(main);
-    wisp_diagram.append(main);
-  
-    const toc = new WispToc(main)
-    toc.append(main)
-  
-    // load main
-    main.load("index.md");
-  
-
-    
-    // init footer
-    const footer = new Wisp("footer");
-    // load footer
-    footer.load("footer.md");
-  }
-  
-
-
 /**
  * wisp - a client-side flat file CMS
  * Copyright (c) 2019, Isana Kashiwai. (MIT Licensed)
  * https://github.com/lizard-isana/wisp
  */
- var Willo = Willo || {}
+
+var Willo = Willo || {}
 
 Willo.Storage = {};
 Willo.Storage.loaded_page_num = Willo.Storage.loaded_page_num || 0;
@@ -561,7 +99,6 @@ Willo.QueryDecoder = function () {
 
 
 Willo.Wisp = Willo.Wisp || function (id, option) {
-
   var Storage = {}
 
   var ResourceLoader = function (array, storage, callback) {
@@ -588,13 +125,16 @@ Willo.Wisp = Willo.Wisp || function (id, option) {
     }
   }
 
-  var Initialize = function (option) {
-
+  var Initialize = function (id, option) {
+    Storage.renderer = Storage.renderer || {};
     Storage.format = "markdown";
     Storage.permit_query = true;
     Storage.query_path = "./";
+    Storage.renderer = new marked.Renderer();
+    Storage.inner_link_target = id;
+    Storage.new_window = true;
     Storage.marked_options = {
-      renderer: new marked.Renderer(),
+      renderer: Storage.renderer,
       gfm: true,
       tables: true,
       breaks: true,
@@ -617,6 +157,9 @@ Willo.Wisp = Willo.Wisp || function (id, option) {
       };
       if (option.marked_options) {
         Storage.marked_options = option.marked_options;
+      };
+      if (option.inner_link_target) {
+        Storage.inner_link_target = option.inner_link_target;
       };
     }
     marked.setOptions(Storage.marked_options);
@@ -716,7 +259,16 @@ Willo.Wisp = Willo.Wisp || function (id, option) {
               marked_page_content = Storage.PostRenderingHook[i](Storage.element_id, marked_page_content);
             }
           }
-          document.getElementById(Storage.element_id).innerHTML = marked_page_content;
+          var element = document.getElementById(Storage.element_id);
+          element.innerHTML = marked_page_content;
+
+          var link = element.querySelectorAll("a");
+          for (var i = 0, ln = link.length; i < ln; i++) {
+            var href = link[i].getAttribute("href");
+            if (href.match(/^(?!http(|s))/) && href.match(/^(?!.*(\/|=)).*/)) {
+              link[i].href = "?" + Storage.inner_link_target + "=" + href;
+            }
+          }
         }
         if (Storage.PostContentLoadHook.length > 0) {
           for (const i in Storage.PostContentLoadHook) {
@@ -731,7 +283,7 @@ Willo.Wisp = Willo.Wisp || function (id, option) {
       })
     }
   }
-  Initialize(option)
+  Initialize(id, option)
 }
 
 Willo.Wisp.prototype = {
@@ -775,7 +327,6 @@ WispNavBar.prototype = {
     obj.post_content_load_hook(function (id, contents) {
       const wrapper = document.getElementById(id);
       const menu_target = document.getElementById(obj.menu_target);
-      console.log(obj.menu_target)
       menu_target.addEventListener('click', function (e) {
         let menu_items = wrapper.querySelectorAll("ul");
         for (let i = 0, ln = menu_items.length; i < ln; i++) {
@@ -827,11 +378,11 @@ WispToc.prototype = {
 // WispHighlight
 var WispHighlight = WispHighlight || function (id, option) {
   const script = document.createElement('script');
-  script.src = 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js';
+  script.src = '//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js';
   document.getElementsByTagName("head")[0].appendChild(script);
 
   const link = document.createElement('link');
-  link.href = 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css';
+  link.href = '//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css';
   link.rel = 'stylesheet'
   document.getElementsByTagName("head")[0].appendChild(link);
 }
@@ -852,7 +403,7 @@ var WispMathJax = WispMathJax || function () {
   script_mathjax_config.type = 'text/x-mathjax-config';
   document.getElementsByTagName("head")[0].appendChild(script_mathjax_config);
   const script_mathjax_main = document.createElement('script');
-  script_mathjax_main.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML&delayStartupUntil=configured';
+  script_mathjax_main.src = '//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML&delayStartupUntil=configured';
   document.getElementsByTagName("head")[0].appendChild(script_mathjax_main);
 }
 
@@ -871,8 +422,8 @@ WispMathJax.prototype = {
 // WispChart
 var WispChart = WispChart || function () {
   var scripts = [
-    "https://cdnjs.cloudflare.com/ajax/libs/c3/0.7.0/c3.min.js",
-    "https://cdnjs.cloudflare.com/ajax/libs/d3/5.9.2/d3.min.js"
+    "//cdnjs.cloudflare.com/ajax/libs/c3/0.7.0/c3.min.js",
+    "//cdnjs.cloudflare.com/ajax/libs/d3/5.9.2/d3.min.js"
   ]
   var len = scripts.length;
   var i = 0;
@@ -887,7 +438,7 @@ var WispChart = WispChart || function () {
   };
   appendScript()
   const link = document.createElement('link');
-  link.href = "https://cdnjs.cloudflare.com/ajax/libs/c3/0.7.0/c3.min.css";
+  link.href = "//cdnjs.cloudflare.com/ajax/libs/c3/0.7.0/c3.min.css";
   link.rel = 'stylesheet'
   document.getElementsByTagName("head")[0].appendChild(link);
 }
@@ -922,8 +473,8 @@ WispChart.prototype = {
 // WispFlowChart
 var WispFlowChart = WispFlowChart || function () {
   var scripts = [
-    "https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js",
-    "https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.11.3/flowchart.min.js"
+    "//cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js",
+    "//cdnjs.cloudflare.com/ajax/libs/flowchart/1.11.3/flowchart.min.js"
   ]
   var len = scripts.length;
   var i = 0;
@@ -973,11 +524,11 @@ WispFlowChart.prototype = {
 // WispSequenceDiagram
 var WispSequenceDiagram = WispSequenceDiagram || function () {
   const scripts = [
-    "https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js",
-    "https://cdnjs.cloudflare.com/ajax/libs/webfont/1.6.28/webfontloader.js",
-    "https://cdnjs.cloudflare.com/ajax/libs/snap.svg/0.5.1/snap.svg-min.js",
-    "https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.1/underscore-min.js",
-    "https://cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.6/sequence-diagram-min.js"
+    "//cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js",
+    "//cdnjs.cloudflare.com/ajax/libs/webfont/1.6.28/webfontloader.js",
+    "//cdnjs.cloudflare.com/ajax/libs/snap.svg/0.5.1/snap.svg-min.js",
+    "//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.1/underscore-min.js",
+    "//cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.6/sequence-diagram-min.js"
   ]
   var len = scripts.length;
   var i = 0;
@@ -1024,20 +575,19 @@ WispSequenceDiagram.prototype = {
   }
 }
 
+  /**
+   * marked - a markdown parser
+   * Copyright (c) 2011-2018, Christopher Jeffrey. (MIT Licensed)
+   * https://github.com/markedjs/marked
+   */
 
-/**
- * marked - a markdown parser
- * Copyright (c) 2011-2018, Christopher Jeffrey. (MIT Licensed)
- * https://github.com/markedjs/marked
- */
-
-;(function(root) {
+  ; (function (root) {
     'use strict';
-    
+
     /**
      * Block-Level Grammar
      */
-    
+
     var block = {
       newline: /^\n+/,
       code: /^( {4}[^\n]+\n*)+/,
@@ -1063,26 +613,26 @@ WispSequenceDiagram.prototype = {
       paragraph: /^([^\n]+(?:\n(?!hr|heading|lheading| {0,3}>|<\/?(?:tag)(?: +|\n|\/?>)|<(?:script|pre|style|!--))[^\n]+)*)/,
       text: /^[^\n]+/
     };
-    
+
     block._label = /(?!\s*\])(?:\\[\[\]]|[^\[\]])+/;
     block._title = /(?:"(?:\\"?|[^"\\])*"|'[^'\n]*(?:\n[^'\n]+)*\n?'|\([^()]*\))/;
     block.def = edit(block.def)
       .replace('label', block._label)
       .replace('title', block._title)
       .getRegex();
-    
+
     block.bullet = /(?:[*+-]|\d{1,9}\.)/;
     block.item = /^( *)(bull) ?[^\n]*(?:\n(?!\1bull ?)[^\n]*)*/;
     block.item = edit(block.item, 'gm')
       .replace(/bull/g, block.bullet)
       .getRegex();
-    
+
     block.list = edit(block.list)
       .replace(/bull/g, block.bullet)
       .replace('hr', '\\n+(?=\\1?(?:(?:- *){3,}|(?:_ *){3,}|(?:\\* *){3,})(?:\\n+|$))')
       .replace('def', '\\n+(?=' + block.def.source + ')')
       .getRegex();
-    
+
     block._tag = 'address|article|aside|base|basefont|blockquote|body|caption'
       + '|center|col|colgroup|dd|details|dialog|dir|div|dl|dt|fieldset|figcaption'
       + '|figure|footer|form|frame|frameset|h[1-6]|head|header|hr|html|iframe'
@@ -1095,53 +645,53 @@ WispSequenceDiagram.prototype = {
       .replace('tag', block._tag)
       .replace('attribute', / +[a-zA-Z:_][\w.:-]*(?: *= *"[^"\n]*"| *= *'[^'\n]*'| *= *[^\s"'=<>`]+)?/)
       .getRegex();
-    
+
     block.paragraph = edit(block.paragraph)
       .replace('hr', block.hr)
       .replace('heading', block.heading)
       .replace('lheading', block.lheading)
       .replace('tag', block._tag) // pars can be interrupted by type (6) html blocks
       .getRegex();
-    
+
     block.blockquote = edit(block.blockquote)
       .replace('paragraph', block.paragraph)
       .getRegex();
-    
+
     /**
      * Normal Block Grammar
      */
-    
+
     block.normal = merge({}, block);
-    
+
     /**
      * GFM Block Grammar
      */
-    
+
     block.gfm = merge({}, block.normal, {
       fences: /^ {0,3}(`{3,}|~{3,})([^`\n]*)\n(?:|([\s\S]*?)\n)(?: {0,3}\1[~`]* *(?:\n+|$)|$)/,
       paragraph: /^/,
       heading: /^ *(#{1,6}) +([^\n]+?) *#* *(?:\n+|$)/
     });
-    
+
     block.gfm.paragraph = edit(block.paragraph)
       .replace('(?!', '(?!'
         + block.gfm.fences.source.replace('\\1', '\\2') + '|'
         + block.list.source.replace('\\1', '\\3') + '|')
       .getRegex();
-    
+
     /**
      * GFM + Tables Block Grammar
      */
-    
+
     block.tables = merge({}, block.gfm, {
       nptable: /^ *([^|\n ].*\|.*)\n *([-:]+ *\|[-| :]*)(?:\n((?:.*[^>\n ].*(?:\n|$))*)\n*|$)/,
       table: /^ *\|(.+)\n *\|?( *[-:]+[-| :]*)(?:\n((?: *[^>\n ].*(?:\n|$))*)\n*|$)/
     });
-    
+
     /**
      * Pedantic grammar
      */
-    
+
     block.pedantic = merge({}, block.normal, {
       html: edit(
         '^ *(?:comment *(?:\\n|\\s*$)'
@@ -1155,17 +705,17 @@ WispSequenceDiagram.prototype = {
         .getRegex(),
       def: /^ *\[([^\]]+)\]: *<?([^\s>]+)>?(?: +(["(][^\n]+[")]))? *(?:\n+|$)/
     });
-    
+
     /**
      * Block Lexer
      */
-    
+
     function Lexer(options) {
       this.tokens = [];
       this.tokens.links = Object.create(null);
       this.options = options || marked.defaults;
       this.rules = block.normal;
-    
+
       if (this.options.pedantic) {
         this.rules = block.pedantic;
       } else if (this.options.gfm) {
@@ -1176,59 +726,59 @@ WispSequenceDiagram.prototype = {
         }
       }
     }
-    
+
     /**
      * Expose Block Rules
      */
-    
+
     Lexer.rules = block;
-    
+
     /**
      * Static Lex Method
      */
-    
-    Lexer.lex = function(src, options) {
+
+    Lexer.lex = function (src, options) {
       var lexer = new Lexer(options);
       return lexer.lex(src);
     };
-    
+
     /**
      * Preprocessing
      */
-    
-    Lexer.prototype.lex = function(src) {
+
+    Lexer.prototype.lex = function (src) {
       src = src
         .replace(/\r\n|\r/g, '\n')
         .replace(/\t/g, '    ')
         .replace(/\u00a0/g, ' ')
         .replace(/\u2424/g, '\n');
-    
+
       return this.token(src, true);
     };
-    
+
     /**
      * Lexing
      */
-    
-    Lexer.prototype.token = function(src, top) {
+
+    Lexer.prototype.token = function (src, top) {
       src = src.replace(/^ +$/gm, '');
       var next,
-          loose,
-          cap,
-          bull,
-          b,
-          item,
-          listStart,
-          listItems,
-          t,
-          space,
-          i,
-          tag,
-          l,
-          isordered,
-          istask,
-          ischecked;
-    
+        loose,
+        cap,
+        bull,
+        b,
+        item,
+        listStart,
+        listItems,
+        t,
+        space,
+        i,
+        tag,
+        l,
+        isordered,
+        istask,
+        ischecked;
+
       while (src) {
         // newline
         if (cap = this.rules.newline.exec(src)) {
@@ -1239,7 +789,7 @@ WispSequenceDiagram.prototype = {
             });
           }
         }
-    
+
         // code
         if (cap = this.rules.code.exec(src)) {
           src = src.substring(cap[0].length);
@@ -1252,7 +802,7 @@ WispSequenceDiagram.prototype = {
           });
           continue;
         }
-    
+
         // fences (gfm)
         if (cap = this.rules.fences.exec(src)) {
           src = src.substring(cap[0].length);
@@ -1263,7 +813,7 @@ WispSequenceDiagram.prototype = {
           });
           continue;
         }
-    
+
         // heading
         if (cap = this.rules.heading.exec(src)) {
           src = src.substring(cap[0].length);
@@ -1274,7 +824,7 @@ WispSequenceDiagram.prototype = {
           });
           continue;
         }
-    
+
         // table no leading pipe (gfm)
         if (top && (cap = this.rules.nptable.exec(src))) {
           item = {
@@ -1283,10 +833,10 @@ WispSequenceDiagram.prototype = {
             align: cap[2].replace(/^ *|\| *$/g, '').split(/ *\| */),
             cells: cap[3] ? cap[3].replace(/\n$/, '').split('\n') : []
           };
-    
+
           if (item.header.length === item.align.length) {
             src = src.substring(cap[0].length);
-    
+
             for (i = 0; i < item.align.length; i++) {
               if (/^ *-+: *$/.test(item.align[i])) {
                 item.align[i] = 'right';
@@ -1298,17 +848,17 @@ WispSequenceDiagram.prototype = {
                 item.align[i] = null;
               }
             }
-    
+
             for (i = 0; i < item.cells.length; i++) {
               item.cells[i] = splitCells(item.cells[i], item.header.length);
             }
-    
+
             this.tokens.push(item);
-    
+
             continue;
           }
         }
-    
+
         // hr
         if (cap = this.rules.hr.exec(src)) {
           src = src.substring(cap[0].length);
@@ -1317,60 +867,60 @@ WispSequenceDiagram.prototype = {
           });
           continue;
         }
-    
+
         // blockquote
         if (cap = this.rules.blockquote.exec(src)) {
           src = src.substring(cap[0].length);
-    
+
           this.tokens.push({
             type: 'blockquote_start'
           });
-    
+
           cap = cap[0].replace(/^ *> ?/gm, '');
-    
+
           // Pass `top` to keep the current
           // "toplevel" state. This is exactly
           // how markdown.pl works.
           this.token(cap, top);
-    
+
           this.tokens.push({
             type: 'blockquote_end'
           });
-    
+
           continue;
         }
-    
+
         // list
         if (cap = this.rules.list.exec(src)) {
           src = src.substring(cap[0].length);
           bull = cap[2];
           isordered = bull.length > 1;
-    
+
           listStart = {
             type: 'list_start',
             ordered: isordered,
             start: isordered ? +bull : '',
             loose: false
           };
-    
+
           this.tokens.push(listStart);
-    
+
           // Get each top-level item.
           cap = cap[0].match(this.rules.item);
-    
+
           listItems = [];
           next = false;
           l = cap.length;
           i = 0;
-    
+
           for (; i < l; i++) {
             item = cap[i];
-    
+
             // Remove the list item's bullet
             // so it is seen as the next token.
             space = item.length;
             item = item.replace(/^ *([*+-]|\d+\.) */, '');
-    
+
             // Outdent whatever the
             // list item contains. Hacky.
             if (~item.indexOf('\n ')) {
@@ -1379,7 +929,7 @@ WispSequenceDiagram.prototype = {
                 ? item.replace(new RegExp('^ {1,' + space + '}', 'gm'), '')
                 : item.replace(/^ {1,4}/gm, '');
             }
-    
+
             // Determine whether the next list item belongs here.
             // Backpedal if it does not belong in this list.
             if (i !== l - 1) {
@@ -1390,7 +940,7 @@ WispSequenceDiagram.prototype = {
                 i = l - 1;
               }
             }
-    
+
             // Determine whether item is loose or not.
             // Use: /(^|\n)(?! )[^\n]+\n\n(?!\s*$)/
             // for discount behavior.
@@ -1399,11 +949,11 @@ WispSequenceDiagram.prototype = {
               next = item.charAt(item.length - 1) === '\n';
               if (!loose) loose = next;
             }
-    
+
             if (loose) {
               listStart.loose = true;
             }
-    
+
             // Check for task list items
             istask = /^\[[ xX]\] /.test(item);
             ischecked = undefined;
@@ -1411,25 +961,25 @@ WispSequenceDiagram.prototype = {
               ischecked = item[1] !== ' ';
               item = item.replace(/^\[[ xX]\] +/, '');
             }
-    
+
             t = {
               type: 'list_item_start',
               task: istask,
               checked: ischecked,
               loose: loose
             };
-    
+
             listItems.push(t);
             this.tokens.push(t);
-    
+
             // Recurse.
             this.token(item, false);
-    
+
             this.tokens.push({
               type: 'list_item_end'
             });
           }
-    
+
           if (listStart.loose) {
             l = listItems.length;
             i = 0;
@@ -1437,14 +987,14 @@ WispSequenceDiagram.prototype = {
               listItems[i].loose = true;
             }
           }
-    
+
           this.tokens.push({
             type: 'list_end'
           });
-    
+
           continue;
         }
-    
+
         // html
         if (cap = this.rules.html.exec(src)) {
           src = src.substring(cap[0].length);
@@ -1458,7 +1008,7 @@ WispSequenceDiagram.prototype = {
           });
           continue;
         }
-    
+
         // def
         if (top && (cap = this.rules.def.exec(src))) {
           src = src.substring(cap[0].length);
@@ -1472,7 +1022,7 @@ WispSequenceDiagram.prototype = {
           }
           continue;
         }
-    
+
         // table (gfm)
         if (top && (cap = this.rules.table.exec(src))) {
           item = {
@@ -1481,10 +1031,10 @@ WispSequenceDiagram.prototype = {
             align: cap[2].replace(/^ *|\| *$/g, '').split(/ *\| */),
             cells: cap[3] ? cap[3].replace(/(?: *\| *)?\n$/, '').split('\n') : []
           };
-    
+
           if (item.header.length === item.align.length) {
             src = src.substring(cap[0].length);
-    
+
             for (i = 0; i < item.align.length; i++) {
               if (/^ *-+: *$/.test(item.align[i])) {
                 item.align[i] = 'right';
@@ -1496,19 +1046,19 @@ WispSequenceDiagram.prototype = {
                 item.align[i] = null;
               }
             }
-    
+
             for (i = 0; i < item.cells.length; i++) {
               item.cells[i] = splitCells(
                 item.cells[i].replace(/^ *\| *| *\| *$/g, ''),
                 item.header.length);
             }
-    
+
             this.tokens.push(item);
-    
+
             continue;
           }
         }
-    
+
         // lheading
         if (cap = this.rules.lheading.exec(src)) {
           src = src.substring(cap[0].length);
@@ -1519,7 +1069,7 @@ WispSequenceDiagram.prototype = {
           });
           continue;
         }
-    
+
         // top-level paragraph
         if (top && (cap = this.rules.paragraph.exec(src))) {
           src = src.substring(cap[0].length);
@@ -1531,7 +1081,7 @@ WispSequenceDiagram.prototype = {
           });
           continue;
         }
-    
+
         // text
         if (cap = this.rules.text.exec(src)) {
           // Top-level should never reach here.
@@ -1542,19 +1092,19 @@ WispSequenceDiagram.prototype = {
           });
           continue;
         }
-    
+
         if (src) {
           throw new Error('Infinite loop on byte: ' + src.charCodeAt(0));
         }
       }
-    
+
       return this.tokens;
     };
-    
+
     /**
      * Inline-Level Grammar
      */
-    
+
     var inline = {
       escape: /^\\([!"#$%&'()*+,\-./:;<=>?@\[\]\\^_`{|}~])/,
       autolink: /^<(scheme:[^\s\x00-\x1f<>]*|email)>/,
@@ -1575,52 +1125,52 @@ WispSequenceDiagram.prototype = {
       del: noop,
       text: /^(`+|[^`])[\s\S]*?(?=[\\<!\[`*]|\b_| {2,}\n|$)/
     };
-    
+
     // list of punctuation marks from common mark spec
     // without ` and ] to workaround Rule 17 (inline code blocks/links)
     inline._punctuation = '!"#$%&\'()*+,\\-./:;<=>?@\\[^_{|}~';
     inline.em = edit(inline.em).replace(/punctuation/g, inline._punctuation).getRegex();
-    
+
     inline._escapes = /\\([!"#$%&'()*+,\-./:;<=>?@\[\]\\^_`{|}~])/g;
-    
+
     inline._scheme = /[a-zA-Z][a-zA-Z0-9+.-]{1,31}/;
     inline._email = /[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+(@)[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+(?![-_])/;
     inline.autolink = edit(inline.autolink)
       .replace('scheme', inline._scheme)
       .replace('email', inline._email)
       .getRegex();
-    
+
     inline._attribute = /\s+[a-zA-Z:_][\w.:-]*(?:\s*=\s*"[^"]*"|\s*=\s*'[^']*'|\s*=\s*[^\s"'=<>`]+)?/;
-    
+
     inline.tag = edit(inline.tag)
       .replace('comment', block._comment)
       .replace('attribute', inline._attribute)
       .getRegex();
-    
+
     inline._label = /(?:\[[^\[\]]*\]|\\[\[\]]?|`[^`]*`|[^\[\]\\])*?/;
     inline._href = /\s*(<(?:\\[<>]?|[^\s<>\\])*>|[^\s\x00-\x1f]*)/;
     inline._title = /"(?:\\"?|[^"\\])*"|'(?:\\'?|[^'\\])*'|\((?:\\\)?|[^)\\])*\)/;
-    
+
     inline.link = edit(inline.link)
       .replace('label', inline._label)
       .replace('href', inline._href)
       .replace('title', inline._title)
       .getRegex();
-    
+
     inline.reflink = edit(inline.reflink)
       .replace('label', inline._label)
       .getRegex();
-    
+
     /**
      * Normal Inline Grammar
      */
-    
+
     inline.normal = merge({}, inline);
-    
+
     /**
      * Pedantic Inline Grammar
      */
-    
+
     inline.pedantic = merge({}, inline.normal, {
       strong: /^__(?=\S)([\s\S]*?\S)__(?!_)|^\*\*(?=\S)([\s\S]*?\S)\*\*(?!\*)/,
       em: /^_(?=\S)([\s\S]*?\S)_(?!_)|^\*(?=\S)([\s\S]*?\S)\*(?!\*)/,
@@ -1631,11 +1181,11 @@ WispSequenceDiagram.prototype = {
         .replace('label', inline._label)
         .getRegex()
     });
-    
+
     /**
      * GFM Inline Grammar
      */
-    
+
     inline.gfm = merge({}, inline.normal, {
       escape: edit(inline.escape).replace('])', '~|])').getRegex(),
       _extended_email: /[A-Za-z0-9._+-]+(@)[a-zA-Z0-9-_]+(?:\.[a-zA-Z0-9-_]*[a-zA-Z0-9])+(?![-_])/,
@@ -1647,34 +1197,34 @@ WispSequenceDiagram.prototype = {
         .replace('|$', '|https?://|ftp://|www\\.|[a-zA-Z0-9.!#$%&\'*+/=?^_`{\\|}~-]+@|$')
         .getRegex()
     });
-    
+
     inline.gfm.url = edit(inline.gfm.url, 'i')
       .replace('email', inline.gfm._extended_email)
       .getRegex();
     /**
      * GFM + Line Breaks Inline Grammar
      */
-    
+
     inline.breaks = merge({}, inline.gfm, {
       br: edit(inline.br).replace('{2,}', '*').getRegex(),
       text: edit(inline.gfm.text).replace('{2,}', '*').getRegex()
     });
-    
+
     /**
      * Inline Lexer & Compiler
      */
-    
+
     function InlineLexer(links, options) {
       this.options = options || marked.defaults;
       this.links = links;
       this.rules = inline.normal;
       this.renderer = this.options.renderer || new Renderer();
       this.renderer.options = this.options;
-    
+
       if (!this.links) {
         throw new Error('Tokens array requires a `links` property.');
       }
-    
+
       if (this.options.pedantic) {
         this.rules = inline.pedantic;
       } else if (this.options.gfm) {
@@ -1685,35 +1235,35 @@ WispSequenceDiagram.prototype = {
         }
       }
     }
-    
+
     /**
      * Expose Inline Rules
      */
-    
+
     InlineLexer.rules = inline;
-    
+
     /**
      * Static Lexing/Compiling Method
      */
-    
-    InlineLexer.output = function(src, links, options) {
+
+    InlineLexer.output = function (src, links, options) {
       var inline = new InlineLexer(links, options);
       return inline.output(src);
     };
-    
+
     /**
      * Lexing/Compiling
      */
-    
-    InlineLexer.prototype.output = function(src) {
+
+    InlineLexer.prototype.output = function (src) {
       var out = '',
-          link,
-          text,
-          href,
-          title,
-          cap,
-          prevCapZero;
-    
+        link,
+        text,
+        href,
+        title,
+        cap,
+        prevCapZero;
+
       while (src) {
         // escape
         if (cap = this.rules.escape.exec(src)) {
@@ -1721,7 +1271,7 @@ WispSequenceDiagram.prototype = {
           out += escape(cap[1]);
           continue;
         }
-    
+
         // tag
         if (cap = this.rules.tag.exec(src)) {
           if (!this.inLink && /^<a /i.test(cap[0])) {
@@ -1734,7 +1284,7 @@ WispSequenceDiagram.prototype = {
           } else if (this.inRawBlock && /^<\/(pre|code|kbd|script)(\s|>)/i.test(cap[0])) {
             this.inRawBlock = false;
           }
-    
+
           src = src.substring(cap[0].length);
           out += this.options.sanitize
             ? this.options.sanitizer
@@ -1743,7 +1293,7 @@ WispSequenceDiagram.prototype = {
             : cap[0];
           continue;
         }
-    
+
         // link
         if (cap = this.rules.link.exec(src)) {
           var lastParenIndex = findClosingBracket(cap[2], '()');
@@ -1757,7 +1307,7 @@ WispSequenceDiagram.prototype = {
           href = cap[2];
           if (this.options.pedantic) {
             link = /^([^'"]*[^\s])\s+(['"])(.*)\2/.exec(href);
-    
+
             if (link) {
               href = link[1];
               title = link[3];
@@ -1775,10 +1325,10 @@ WispSequenceDiagram.prototype = {
           this.inLink = false;
           continue;
         }
-    
+
         // reflink, nolink
         if ((cap = this.rules.reflink.exec(src))
-            || (cap = this.rules.nolink.exec(src))) {
+          || (cap = this.rules.nolink.exec(src))) {
           src = src.substring(cap[0].length);
           link = (cap[2] || cap[1]).replace(/\s+/g, ' ');
           link = this.links[link.toLowerCase()];
@@ -1792,42 +1342,42 @@ WispSequenceDiagram.prototype = {
           this.inLink = false;
           continue;
         }
-    
+
         // strong
         if (cap = this.rules.strong.exec(src)) {
           src = src.substring(cap[0].length);
           out += this.renderer.strong(this.output(cap[4] || cap[3] || cap[2] || cap[1]));
           continue;
         }
-    
+
         // em
         if (cap = this.rules.em.exec(src)) {
           src = src.substring(cap[0].length);
           out += this.renderer.em(this.output(cap[6] || cap[5] || cap[4] || cap[3] || cap[2] || cap[1]));
           continue;
         }
-    
+
         // code
         if (cap = this.rules.code.exec(src)) {
           src = src.substring(cap[0].length);
           out += this.renderer.codespan(escape(cap[2].trim(), true));
           continue;
         }
-    
+
         // br
         if (cap = this.rules.br.exec(src)) {
           src = src.substring(cap[0].length);
           out += this.renderer.br();
           continue;
         }
-    
+
         // del (gfm)
         if (cap = this.rules.del.exec(src)) {
           src = src.substring(cap[0].length);
           out += this.renderer.del(this.output(cap[1]));
           continue;
         }
-    
+
         // autolink
         if (cap = this.rules.autolink.exec(src)) {
           src = src.substring(cap[0].length);
@@ -1841,7 +1391,7 @@ WispSequenceDiagram.prototype = {
           out += this.renderer.link(href, null, text);
           continue;
         }
-    
+
         // url (gfm)
         if (!this.inLink && (cap = this.rules.url.exec(src))) {
           if (cap[2] === '@') {
@@ -1864,7 +1414,7 @@ WispSequenceDiagram.prototype = {
           out += this.renderer.link(href, null, text);
           continue;
         }
-    
+
         // text
         if (cap = this.rules.text.exec(src)) {
           src = src.substring(cap[0].length);
@@ -1875,37 +1425,37 @@ WispSequenceDiagram.prototype = {
           }
           continue;
         }
-    
+
         if (src) {
           throw new Error('Infinite loop on byte: ' + src.charCodeAt(0));
         }
       }
-    
+
       return out;
     };
-    
-    InlineLexer.escapes = function(text) {
+
+    InlineLexer.escapes = function (text) {
       return text ? text.replace(InlineLexer.rules._escapes, '$1') : text;
     };
-    
+
     /**
      * Compile Link
      */
-    
-    InlineLexer.prototype.outputLink = function(cap, link) {
+
+    InlineLexer.prototype.outputLink = function (cap, link) {
       var href = link.href,
-          title = link.title ? escape(link.title) : null;
-    
+        title = link.title ? escape(link.title) : null;
+
       return cap[0].charAt(0) !== '!'
         ? this.renderer.link(href, title, this.output(cap[1]))
         : this.renderer.image(href, title, escape(cap[1]));
     };
-    
+
     /**
      * Smartypants Transformations
      */
-    
-    InlineLexer.prototype.smartypants = function(text) {
+
+    InlineLexer.prototype.smartypants = function (text) {
       if (!this.options.smartypants) return text;
       return text
         // em-dashes
@@ -1923,18 +1473,18 @@ WispSequenceDiagram.prototype = {
         // ellipses
         .replace(/\.{3}/g, '\u2026');
     };
-    
+
     /**
      * Mangle Links
      */
-    
-    InlineLexer.prototype.mangle = function(text) {
+
+    InlineLexer.prototype.mangle = function (text) {
       if (!this.options.mangle) return text;
       var out = '',
-          l = text.length,
-          i = 0,
-          ch;
-    
+        l = text.length,
+        i = 0,
+        ch;
+
       for (; i < l; i++) {
         ch = text.charCodeAt(i);
         if (Math.random() > 0.5) {
@@ -1942,19 +1492,19 @@ WispSequenceDiagram.prototype = {
         }
         out += '&#' + ch + ';';
       }
-    
+
       return out;
     };
-    
+
     /**
      * Renderer
      */
-    
+
     function Renderer(options) {
       this.options = options || marked.defaults;
     }
-    
-    Renderer.prototype.code = function(code, infostring, escaped) {
+
+    Renderer.prototype.code = function (code, infostring, escaped) {
       var lang = (infostring || '').match(/\S*/)[0];
       if (this.options.highlight) {
         var out = this.options.highlight(code, lang);
@@ -1963,13 +1513,13 @@ WispSequenceDiagram.prototype = {
           code = out;
         }
       }
-    
+
       if (!lang) {
         return '<pre><code>'
           + (escaped ? code : escape(code, true))
           + '</code></pre>';
       }
-    
+
       return '<pre><code class="'
         + this.options.langPrefix
         + escape(lang, true)
@@ -1977,16 +1527,16 @@ WispSequenceDiagram.prototype = {
         + (escaped ? code : escape(code, true))
         + '</code></pre>\n';
     };
-    
-    Renderer.prototype.blockquote = function(quote) {
+
+    Renderer.prototype.blockquote = function (quote) {
       return '<blockquote>\n' + quote + '</blockquote>\n';
     };
-    
-    Renderer.prototype.html = function(html) {
+
+    Renderer.prototype.html = function (html) {
       return html;
     };
-    
-    Renderer.prototype.heading = function(text, level, raw, slugger) {
+
+    Renderer.prototype.heading = function (text, level, raw, slugger) {
       if (this.options.headerIds) {
         return '<h'
           + level
@@ -2002,36 +1552,36 @@ WispSequenceDiagram.prototype = {
       // ignore IDs
       return '<h' + level + '>' + text + '</h' + level + '>\n';
     };
-    
-    Renderer.prototype.hr = function() {
+
+    Renderer.prototype.hr = function () {
       return this.options.xhtml ? '<hr/>\n' : '<hr>\n';
     };
-    
-    Renderer.prototype.list = function(body, ordered, start) {
+
+    Renderer.prototype.list = function (body, ordered, start) {
       var type = ordered ? 'ol' : 'ul',
-          startatt = (ordered && start !== 1) ? (' start="' + start + '"') : '';
+        startatt = (ordered && start !== 1) ? (' start="' + start + '"') : '';
       return '<' + type + startatt + '>\n' + body + '</' + type + '>\n';
     };
-    
-    Renderer.prototype.listitem = function(text) {
+
+    Renderer.prototype.listitem = function (text) {
       return '<li>' + text + '</li>\n';
     };
-    
-    Renderer.prototype.checkbox = function(checked) {
+
+    Renderer.prototype.checkbox = function (checked) {
       return '<input '
         + (checked ? 'checked="" ' : '')
         + 'disabled="" type="checkbox"'
         + (this.options.xhtml ? ' /' : '')
         + '> ';
     };
-    
-    Renderer.prototype.paragraph = function(text) {
+
+    Renderer.prototype.paragraph = function (text) {
       return '<p>' + text + '</p>\n';
     };
-    
-    Renderer.prototype.table = function(header, body) {
+
+    Renderer.prototype.table = function (header, body) {
       if (body) body = '<tbody>' + body + '</tbody>';
-    
+
       return '<table>\n'
         + '<thead>\n'
         + header
@@ -2039,41 +1589,41 @@ WispSequenceDiagram.prototype = {
         + body
         + '</table>\n';
     };
-    
-    Renderer.prototype.tablerow = function(content) {
+
+    Renderer.prototype.tablerow = function (content) {
       return '<tr>\n' + content + '</tr>\n';
     };
-    
-    Renderer.prototype.tablecell = function(content, flags) {
+
+    Renderer.prototype.tablecell = function (content, flags) {
       var type = flags.header ? 'th' : 'td';
       var tag = flags.align
         ? '<' + type + ' align="' + flags.align + '">'
         : '<' + type + '>';
       return tag + content + '</' + type + '>\n';
     };
-    
+
     // span level renderer
-    Renderer.prototype.strong = function(text) {
+    Renderer.prototype.strong = function (text) {
       return '<strong>' + text + '</strong>';
     };
-    
-    Renderer.prototype.em = function(text) {
+
+    Renderer.prototype.em = function (text) {
       return '<em>' + text + '</em>';
     };
-    
-    Renderer.prototype.codespan = function(text) {
+
+    Renderer.prototype.codespan = function (text) {
       return '<code>' + text + '</code>';
     };
-    
-    Renderer.prototype.br = function() {
+
+    Renderer.prototype.br = function () {
       return this.options.xhtml ? '<br/>' : '<br>';
     };
-    
-    Renderer.prototype.del = function(text) {
+
+    Renderer.prototype.del = function (text) {
       return '<del>' + text + '</del>';
     };
-    
-    Renderer.prototype.link = function(href, title, text) {
+
+    Renderer.prototype.link = function (href, title, text) {
       href = cleanUrl(this.options.sanitize, this.options.baseUrl, href);
       if (href === null) {
         return text;
@@ -2085,13 +1635,13 @@ WispSequenceDiagram.prototype = {
       out += '>' + text + '</a>';
       return out;
     };
-    
-    Renderer.prototype.image = function(href, title, text) {
+
+    Renderer.prototype.image = function (href, title, text) {
       href = cleanUrl(this.options.sanitize, this.options.baseUrl, href);
       if (href === null) {
         return text;
       }
-    
+
       var out = '<img src="' + href + '" alt="' + text + '"';
       if (title) {
         out += ' title="' + title + '"';
@@ -2099,41 +1649,41 @@ WispSequenceDiagram.prototype = {
       out += this.options.xhtml ? '/>' : '>';
       return out;
     };
-    
-    Renderer.prototype.text = function(text) {
+
+    Renderer.prototype.text = function (text) {
       return text;
     };
-    
+
     /**
      * TextRenderer
      * returns only the textual part of the token
      */
-    
-    function TextRenderer() {}
-    
+
+    function TextRenderer() { }
+
     // no need for block level renderers
-    
+
     TextRenderer.prototype.strong =
-    TextRenderer.prototype.em =
-    TextRenderer.prototype.codespan =
-    TextRenderer.prototype.del =
-    TextRenderer.prototype.text = function (text) {
-      return text;
-    };
-    
+      TextRenderer.prototype.em =
+      TextRenderer.prototype.codespan =
+      TextRenderer.prototype.del =
+      TextRenderer.prototype.text = function (text) {
+        return text;
+      };
+
     TextRenderer.prototype.link =
-    TextRenderer.prototype.image = function(href, title, text) {
-      return '' + text;
-    };
-    
-    TextRenderer.prototype.br = function() {
+      TextRenderer.prototype.image = function (href, title, text) {
+        return '' + text;
+      };
+
+    TextRenderer.prototype.br = function () {
       return '';
     };
-    
+
     /**
      * Parsing & Compiling
      */
-    
+
     function Parser(options) {
       this.tokens = [];
       this.token = null;
@@ -2143,72 +1693,72 @@ WispSequenceDiagram.prototype = {
       this.renderer.options = this.options;
       this.slugger = new Slugger();
     }
-    
+
     /**
      * Static Parse Method
      */
-    
-    Parser.parse = function(src, options) {
+
+    Parser.parse = function (src, options) {
       var parser = new Parser(options);
       return parser.parse(src);
     };
-    
+
     /**
      * Parse Loop
      */
-    
-    Parser.prototype.parse = function(src) {
+
+    Parser.prototype.parse = function (src) {
       this.inline = new InlineLexer(src.links, this.options);
       // use an InlineLexer with a TextRenderer to extract pure text
       this.inlineText = new InlineLexer(
         src.links,
-        merge({}, this.options, {renderer: new TextRenderer()})
+        merge({}, this.options, { renderer: new TextRenderer() })
       );
       this.tokens = src.reverse();
-    
+
       var out = '';
       while (this.next()) {
         out += this.tok();
       }
-    
+
       return out;
     };
-    
+
     /**
      * Next Token
      */
-    
-    Parser.prototype.next = function() {
+
+    Parser.prototype.next = function () {
       return this.token = this.tokens.pop();
     };
-    
+
     /**
      * Preview Next Token
      */
-    
-    Parser.prototype.peek = function() {
+
+    Parser.prototype.peek = function () {
       return this.tokens[this.tokens.length - 1] || 0;
     };
-    
+
     /**
      * Parse Text Tokens
      */
-    
-    Parser.prototype.parseText = function() {
+
+    Parser.prototype.parseText = function () {
       var body = this.token.text;
-    
+
       while (this.peek().type === 'text') {
         body += '\n' + this.next().text;
       }
-    
+
       return this.inline.output(body);
     };
-    
+
     /**
      * Parse Current Token
      */
-    
-    Parser.prototype.tok = function() {
+
+    Parser.prototype.tok = function () {
       switch (this.token.type) {
         case 'space': {
           return '';
@@ -2230,12 +1780,12 @@ WispSequenceDiagram.prototype = {
         }
         case 'table': {
           var header = '',
-              body = '',
-              i,
-              row,
-              cell,
-              j;
-    
+            body = '',
+            i,
+            row,
+            cell,
+            j;
+
           // header
           cell = '';
           for (i = 0; i < this.token.header.length; i++) {
@@ -2245,10 +1795,10 @@ WispSequenceDiagram.prototype = {
             );
           }
           header += this.renderer.tablerow(cell);
-    
+
           for (i = 0; i < this.token.cells.length; i++) {
             row = this.token.cells[i];
-    
+
             cell = '';
             for (j = 0; j < row.length; j++) {
               cell += this.renderer.tablecell(
@@ -2256,45 +1806,45 @@ WispSequenceDiagram.prototype = {
                 { header: false, align: this.token.align[j] }
               );
             }
-    
+
             body += this.renderer.tablerow(cell);
           }
           return this.renderer.table(header, body);
         }
         case 'blockquote_start': {
           body = '';
-    
+
           while (this.next().type !== 'blockquote_end') {
             body += this.tok();
           }
-    
+
           return this.renderer.blockquote(body);
         }
         case 'list_start': {
           body = '';
           var ordered = this.token.ordered,
-              start = this.token.start;
-    
+            start = this.token.start;
+
           while (this.next().type !== 'list_end') {
             body += this.tok();
           }
-    
+
           return this.renderer.list(body, ordered, start);
         }
         case 'list_item_start': {
           body = '';
           var loose = this.token.loose;
-    
+
           if (this.token.task) {
             body += this.renderer.checkbox(this.token.checked);
           }
-    
+
           while (this.next().type !== 'list_item_end') {
             body += !loose && this.token.type === 'text'
               ? this.parseText()
               : this.tok();
           }
-    
+
           return this.renderer.listitem(body);
         }
         case 'html': {
@@ -2317,26 +1867,26 @@ WispSequenceDiagram.prototype = {
         }
       }
     };
-    
+
     /**
      * Slugger generates header id
      */
-    
-    function Slugger () {
+
+    function Slugger() {
       this.seen = {};
     }
-    
+
     /**
      * Convert string to unique id
      */
-    
+
     Slugger.prototype.slug = function (value) {
       var slug = value
         .toLowerCase()
         .trim()
         .replace(/[\u2000-\u206F\u2E00-\u2E7F\\'!"#$%&()*+,./:;<=>?@[\]^`{|}~]/g, '')
         .replace(/\s/g, '-');
-    
+
       if (this.seen.hasOwnProperty(slug)) {
         var originalSlug = slug;
         do {
@@ -2345,14 +1895,14 @@ WispSequenceDiagram.prototype = {
         } while (this.seen.hasOwnProperty(slug));
       }
       this.seen[slug] = 0;
-    
+
       return slug;
     };
-    
+
     /**
      * Helpers
      */
-    
+
     function escape(html, encode) {
       if (encode) {
         if (escape.escapeTest.test(html)) {
@@ -2363,10 +1913,10 @@ WispSequenceDiagram.prototype = {
           return html.replace(escape.escapeReplaceNoEncode, function (ch) { return escape.replacements[ch]; });
         }
       }
-    
+
       return html;
     }
-    
+
     escape.escapeTest = /[&<>"']/;
     escape.escapeReplace = /[&<>"']/g;
     escape.replacements = {
@@ -2376,13 +1926,13 @@ WispSequenceDiagram.prototype = {
       '"': '&quot;',
       "'": '&#39;'
     };
-    
+
     escape.escapeTestNoEncode = /[<>"']|&(?!#?\w+;)/;
     escape.escapeReplaceNoEncode = /[<>"']|&(?!#?\w+;)/g;
-    
+
     function unescape(html) {
       // explicitly match decimal, hex, and named HTML entities
-      return html.replace(/&(#(?:\d+)|(?:#x[0-9A-Fa-f]+)|(?:\w+));?/ig, function(_, n) {
+      return html.replace(/&(#(?:\d+)|(?:#x[0-9A-Fa-f]+)|(?:\w+));?/ig, function (_, n) {
         n = n.toLowerCase();
         if (n === 'colon') return ':';
         if (n.charAt(0) === '#') {
@@ -2393,23 +1943,23 @@ WispSequenceDiagram.prototype = {
         return '';
       });
     }
-    
+
     function edit(regex, opt) {
       regex = regex.source || regex;
       opt = opt || '';
       return {
-        replace: function(name, val) {
+        replace: function (name, val) {
           val = val.source || val;
           val = val.replace(/(^|[^\[])\^/g, '$1');
           regex = regex.replace(name, val);
           return this;
         },
-        getRegex: function() {
+        getRegex: function () {
           return new RegExp(regex, opt);
         }
       };
     }
-    
+
     function cleanUrl(sanitize, base, href) {
       if (sanitize) {
         try {
@@ -2433,7 +1983,7 @@ WispSequenceDiagram.prototype = {
       }
       return href;
     }
-    
+
     function resolveUrl(base, href) {
       if (!baseUrls[' ' + base]) {
         // we can ignore everything in base after the last slash of its path component,
@@ -2446,7 +1996,7 @@ WispSequenceDiagram.prototype = {
         }
       }
       base = baseUrls[' ' + base];
-    
+
       if (href.slice(0, 2) === '//') {
         return base.replace(/:[\s\S]*/, ':') + href;
       } else if (href.charAt(0) === '/') {
@@ -2457,15 +2007,15 @@ WispSequenceDiagram.prototype = {
     }
     var baseUrls = {};
     var originIndependentUrl = /^$|^[a-z][a-z0-9+.-]*:|^[?#]/i;
-    
-    function noop() {}
+
+    function noop() { }
     noop.exec = noop;
-    
+
     function merge(obj) {
       var i = 1,
-          target,
-          key;
-    
+        target,
+        key;
+
       for (; i < arguments.length; i++) {
         target = arguments[i];
         for (key in target) {
@@ -2474,42 +2024,42 @@ WispSequenceDiagram.prototype = {
           }
         }
       }
-    
+
       return obj;
     }
-    
+
     function splitCells(tableRow, count) {
       // ensure that every cell-delimiting pipe has a space
       // before it to distinguish it from an escaped pipe
       var row = tableRow.replace(/\|/g, function (match, offset, str) {
-            var escaped = false,
-                curr = offset;
-            while (--curr >= 0 && str[curr] === '\\') escaped = !escaped;
-            if (escaped) {
-              // odd number of slashes means | is escaped
-              // so we leave it alone
-              return '|';
-            } else {
-              // add space before unescaped |
-              return ' |';
-            }
-          }),
-          cells = row.split(/ \|/),
-          i = 0;
-    
+        var escaped = false,
+          curr = offset;
+        while (--curr >= 0 && str[curr] === '\\') escaped = !escaped;
+        if (escaped) {
+          // odd number of slashes means | is escaped
+          // so we leave it alone
+          return '|';
+        } else {
+          // add space before unescaped |
+          return ' |';
+        }
+      }),
+        cells = row.split(/ \|/),
+        i = 0;
+
       if (cells.length > count) {
         cells.splice(count);
       } else {
         while (cells.length < count) cells.push('');
       }
-    
+
       for (; i < cells.length; i++) {
         // leading or trailing whitespace is ignored per the gfm spec
         cells[i] = cells[i].trim().replace(/\\\|/g, '|');
       }
       return cells;
     }
-    
+
     // Remove trailing 'c's. Equivalent to str.replace(/c*$/, '').
     // /c*$/ is vulnerable to REDOS.
     // invert: Remove suffix of non-c chars instead. Default falsey.
@@ -2517,10 +2067,10 @@ WispSequenceDiagram.prototype = {
       if (str.length === 0) {
         return '';
       }
-    
+
       // Length of suffix matching the invert condition.
       var suffLen = 0;
-    
+
       // Step left until we fail to match the invert condition.
       while (suffLen < str.length) {
         var currChar = str.charAt(str.length - suffLen - 1);
@@ -2532,10 +2082,10 @@ WispSequenceDiagram.prototype = {
           break;
         }
       }
-    
+
       return str.substr(0, str.length - suffLen);
     }
-    
+
     function findClosingBracket(str, b) {
       if (str.indexOf(b[1]) === -1) {
         return -1;
@@ -2555,11 +2105,11 @@ WispSequenceDiagram.prototype = {
       }
       return -1;
     }
-    
+
     /**
      * Marked
      */
-    
+
     function marked(src, opt, callback) {
       // throw error in case of non string input
       if (typeof src === 'undefined' || src === null) {
@@ -2569,63 +2119,63 @@ WispSequenceDiagram.prototype = {
         throw new Error('marked(): input parameter is of type '
           + Object.prototype.toString.call(src) + ', string expected');
       }
-    
+
       if (callback || typeof opt === 'function') {
         if (!callback) {
           callback = opt;
           opt = null;
         }
-    
+
         opt = merge({}, marked.defaults, opt || {});
-    
+
         var highlight = opt.highlight,
-            tokens,
-            pending,
-            i = 0;
-    
+          tokens,
+          pending,
+          i = 0;
+
         try {
           tokens = Lexer.lex(src, opt);
         } catch (e) {
           return callback(e);
         }
-    
+
         pending = tokens.length;
-    
-        var done = function(err) {
+
+        var done = function (err) {
           if (err) {
             opt.highlight = highlight;
             return callback(err);
           }
-    
+
           var out;
-    
+
           try {
             out = Parser.parse(tokens, opt);
           } catch (e) {
             err = e;
           }
-    
+
           opt.highlight = highlight;
-    
+
           return err
             ? callback(err)
             : callback(null, out);
         };
-    
+
         if (!highlight || highlight.length < 3) {
           return done();
         }
-    
+
         delete opt.highlight;
-    
+
         if (!pending) return done();
-    
+
         for (; i < tokens.length; i++) {
-          (function(token) {
+          (function (token) {
             if (token.type !== 'code') {
               return --pending || done();
             }
-            return highlight(token.text, token.lang, function(err, code) {
+            return highlight(token.text, token.lang, function (err, code) {
               if (err) return done(err);
               if (code == null || code === token.text) {
                 return --pending || done();
@@ -2636,7 +2186,7 @@ WispSequenceDiagram.prototype = {
             });
           })(tokens[i]);
         }
-    
+
         return;
       }
       try {
@@ -2652,17 +2202,17 @@ WispSequenceDiagram.prototype = {
         throw e;
       }
     }
-    
+
     /**
      * Options
      */
-    
+
     marked.options =
-    marked.setOptions = function(opt) {
-      merge(marked.defaults, opt);
-      return marked;
-    };
-    
+      marked.setOptions = function (opt) {
+        merge(marked.defaults, opt);
+        return marked;
+      };
+
     marked.getDefaults = function () {
       return {
         baseUrl: null,
@@ -2684,38 +2234,34 @@ WispSequenceDiagram.prototype = {
         xhtml: false
       };
     };
-    
+
     marked.defaults = marked.getDefaults();
-    
+
     /**
      * Expose
      */
-    
+
     marked.Parser = Parser;
     marked.parser = Parser.parse;
-    
+
     marked.Renderer = Renderer;
     marked.TextRenderer = TextRenderer;
-    
+
     marked.Lexer = Lexer;
     marked.lexer = Lexer.lex;
-    
+
     marked.InlineLexer = InlineLexer;
     marked.inlineLexer = InlineLexer.output;
-    
+
     marked.Slugger = Slugger;
-    
+
     marked.parse = marked;
-    
+
     if (typeof module !== 'undefined' && typeof exports === 'object') {
       module.exports = marked;
     } else if (typeof define === 'function' && define.amd) {
-      define(function() { return marked; });
+      define(function () { return marked; });
     } else {
       root.marked = marked;
     }
-    })(this || (typeof window !== 'undefined' ? window : global));
-
-  </script>
-
-</html>
+  })(this || (typeof window !== 'undefined' ? window : global));
