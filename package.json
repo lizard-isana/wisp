@@ -20,8 +20,15 @@
   },
   "homepage": "https://github.com/lizard-isana/wisp#readme",
   "devDependencies": {
+    "@babel/core": "^7.6.4",
+    "@babel/preset-env": "^7.6.3",
+    "babel": "^6.23.0",
+    "babel-cli": "^6.26.0",
     "gulp": "^4.0.2",
+    "gulp-babel": "^8.0.0",
     "gulp-concat": "^2.6.1",
-    "gulp-uglify": "^3.0.2"
+    "gulp-rename": "^1.4.0",
+    "gulp-uglify": "^3.0.2",
+    "uglify-es": "^3.3.9"
   }
 }
