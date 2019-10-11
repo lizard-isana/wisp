@@ -16,7 +16,7 @@ const concat_js = function() {
       "./src/assets/js/wisp_chart.js",
       "./src/assets/js/wisp_flowchart.js",
       "./src/assets/js/wisp_sequence_diagram.js",
-      "./src/assets/js/vendor/marked.js"
+      "./src/assets/js/vendor/marked.min.js"
     ])
     .pipe(concat("wisp.js"))
     .pipe(gulp.dest("./src/assets/js/"));
