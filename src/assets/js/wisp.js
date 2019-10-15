@@ -59,7 +59,6 @@ Willo.DataLoader = function (option) {
                 var data = XMLhttpObject.responseText;
               }
               if (option.callback) {
-                console.log()
                 option.callback(data, option.id);
               } else {
                 return data;
@@ -286,7 +285,6 @@ Willo.Wisp = Willo.Wisp || function (id, option) {
 }
 
 Willo.Wisp.prototype = {
-  id: this.id,
   pre_rendering_hook: function (f) {
     this.add_pre_rendering_hook(f)
   },
