@@ -188,6 +188,8 @@ Willo.Wisp = Willo.Wisp || function (id, option) {
     Storage.PostPageLoadHook.push(f);
   };
 
+  this.id = id;
+
   this.load_page = function (list) {
     var query = Willo.QueryDecoder();
 
@@ -278,7 +280,6 @@ Willo.Wisp = Willo.Wisp || function (id, option) {
 };
 
 Willo.Wisp.prototype = {
-  id: this.id,
   pre_rendering_hook: function (f) {
     this.add_pre_rendering_hook(f);
   },
