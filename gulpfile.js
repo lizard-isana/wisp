@@ -61,7 +61,9 @@ const copy_css = function () {
 };
 
 const copy_files = function () {
-  return gulp.src(["src/*.html", "src/*.md"]).pipe(gulp.dest("build/"));
+  return gulp
+    .src(["src/*.html", "src/*.md"])
+    .pipe(gulp.dest("build/"));
 };
 
 exports.build = gulp.series(concat_js, build_js, copy_js, copy_css, copy_files);
