@@ -13,10 +13,7 @@
   </head>
   <body>
     <div id="header"></div>
-    <div id="body">
-      <div id="main"></div>
-      <div id="sidebar"></div>
-    </div>
+    <div id="main"></div>
     <div id="footer"></div>
 
     <script>
@@ -38,13 +35,7 @@
         // load header
         header.load("header.md");
 
-        // init sidebar
-        const sidebar = new Wisp("sidebar");
-
-        // load sidebar
-        sidebar.load("sidebar.md");
-
-        // init main
+       // init main
         const main = new Wisp("main");
 
         // append extensions to main
@@ -54,12 +45,11 @@
         wisp_flowchart.append(main);
         wisp_diagram.append(main);
 
-        const toc = new WispToc(main);
-        toc.append(main);
-        toc.append(sidebar);
-
         // load main
         main.load("index.md");
+
+        const toc = new WispToc(main);
+        toc.append(main);
 
         const footer = new Wisp("footer");
         footer.load("footer.md");
