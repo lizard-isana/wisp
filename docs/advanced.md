@@ -13,7 +13,7 @@ Wisp は Wiki ではありません。指定された HTML の要素内に、Mar
 
 ### サンプル: 最小構成
 
-以下は最小構成の Wisp です。 この例では、`<div id="main"></div>`内に、marked.js でレンダリングされた `index.md` が展開されます。
+以下は最小構成の Wisp です。 この例では、`<div id="main"></div>`内に、markdown-it.js でレンダリングされた `index.md` が展開されます。
 
 ```html
 <!DOCTYPE html>
@@ -148,7 +148,7 @@ var main = new Wisp(id, {
 
 ### format
 
-読み込むファイルのフォーマット。`raw`を指定すると、marked.js を通さずに、ファイルの内容をそのまま表示します。デフォルトは`markdown`
+読み込むファイルのフォーマット。`raw`を指定すると、Markdownレンダラを通さずに、ファイルの内容をそのまま表示します。デフォルトは`markdown`
 
 ### query
 
