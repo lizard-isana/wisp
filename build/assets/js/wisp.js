@@ -130,6 +130,7 @@ Willo.Wisp = Willo.Wisp || function (id, option) {
   var Initialize = function (option) {
     Storage.Renderer = window.markdownit({
       html: true,
+      breaks: true,
       linkify: true,
       typographer: true,
       highlight: function (code, lang) {
@@ -145,6 +146,8 @@ Willo.Wisp = Willo.Wisp || function (id, option) {
         return code;
       }
     }).use(markdownitFootnote);
+
+    Storage.Renderer.linkify.set({ fuzzyLink: false });
 
     Storage.format = "markdown";
     Storage.permit_query = true;
