@@ -16,7 +16,6 @@
     <div id="main"></div>
   </div>
   <div id="footer"></div>
-
   <script>
     // load extentions
     const wisp_navbar = new WispNavBar("menu_icon");
@@ -46,13 +45,16 @@
       wisp_flowchart.append(main);
       wisp_diagram.append(main);
 
-      const toc = new WispToc(main);
-      toc.append(main);
-
       // load main
       main.load("index.md");
 
+      const toc = new WispToc(main);
+      toc.append(main);
+
+      // init footer
       const footer = new Wisp("footer");
+
+      // load footer
       footer.load("footer.md");
     };
   </script>

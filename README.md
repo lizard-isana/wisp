@@ -11,7 +11,7 @@ https://lizard-isana.github.io/wisp/ (Japanese)
 
 ## Copyrights
 Wisp depend on below libraries
-- [marked.js](https://marked.js.org/) ([MIT License](https://github.com/markedjs/marked/blob/master/LICENSE.md))
+- [markdown-it.js](https://github.com/markdown-it/markdown-it) ([MIT License](https://github.com/markdown-it/markdown-it/blob/master/LICENSE))
 - [highlight.js](https://highlightjs.org/) ([BSD License](https://github.com/highlightjs/highlight.js/blob/master/LICENSE))
 - [MathJax](https://www.mathjax.org/) ([Apache License 2.0](https://github.com/mathjax/MathJax/blob/master/LICENSE))
 - [flowchart.js](https://flowchart.js.org/) ([MIT License](https://github.com/adrai/flowchart.js/blob/master/license))
