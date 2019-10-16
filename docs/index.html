@@ -43,7 +43,7 @@
       main.post_content_load_hook(function (id, content) {
         var h1 = document.querySelectorAll(`#${id} h1`);
         if (h1.length > 0) {
-          document.title = h1[0].textContent + " | " + document.title;
+          document.title = h1[0].textContent;
         }
         var link = document.querySelectorAll('a[href^="http"]');
         for (var i = 0, ln = link.length; i < ln; i++) {

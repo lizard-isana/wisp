@@ -9,14 +9,15 @@
 > wisp/
 > index.html ... 表示用の html ファイル
 > header.md ... ヘッダ部分の Markdown ファイル
-> sidebar.md. ... サイドバーの Markdown ファイル
-> index.md ... 本文エリアの Markdown ファイル
-> default.css ... css ファイル
-> js/
-> wisp.js ... ライブラリ本体
-> ...
-
-※ `js/` 内にはこれ以外にもプラグインなどの javascript ファイルが入っています。
+> index.md ... 本文エリアの Markdown ファイル 
+> footer.md ... フッタ部分の Markdown ファイル
+> assets/
+>   js/
+>     wisp.js ... ライブラリ本体
+>     wisp.min.js ... ライブラリ本体(圧縮済)
+>   css/
+>     default.css ... css ファイル
+>   img/
 
 このうち、編集が必要なのは 3 つの Markdown ファイルだけ。見た目に手を入れたくなったら、css ファイルを修正すればたいていは事足りるはずです。システムの本体である`index.html`や`js/`以下のスクリプトを触る必要は、まずありません。
 
@@ -32,23 +33,9 @@
 
 それぞれの Markdown ファイルの内容は以下の通りです。
 
-### header(header.md)
-
-`header`のエリアに表示されるコンテンツです。`[Wisp](./)`は、相対リンクでサイトのトップディレクトリを指定しています。
-
-```
-[Wisp](./)
-
-Menu 01
-
-Menu 02
-
-Menu 03
-```
-
 ### main(index.md)
 
-`main`のエリアに表示されるコンテンツです。末尾の`[Markdown Cheatsheet](./?main=markdown.md)`に注目してください。これが Wisp でのサイト内リンクの表記の仕方です。これは、`main`のエリア内に`markdown.md`を読み込むという指定です。
+`main`のエリアに表示されるコンテンツです。末尾の`[Markdown Cheatsheet](markdown.md)`に注目してください。これは標準的なMarkdownのリンクの指定ですが、この記述でMainエリア内のコンテンツが指定のファイルの内容に切り替わります。
 
 ```
 # Wisp - A Client-side Flat File CMS
@@ -59,21 +46,30 @@ Welcome to Wisp!
 
 ### H3 level header
 
-[Markdown Cheatsheet](./?main=markdown.md)
+[Markdown Cheatsheet](markdown.md)
 
 ```
 
-### sidebar(sidebar.md)
 
-`sidebar`のエリアに表示されるコンテンツです。`<div class="toc"></div>`は、目次プラグイン用の指定です。このサイトのサイドメニューに表示されているように、`main`のエリア内の`<h2>`タグを抽出して、ページ内リンクを生成します。
+### header(header.md)
+
+`header`のエリアに表示されるコンテンツです。H1の見出し（行頭#）がサイトタイトルに、リスト（行頭 - ）の内容がハンバーガーメニュー内に、通常の段落が、ヘッダメニューとして表示されます（プラグインのWispNavBarによる効果です）。
 
 ```
-![](./image/logo.svg)
+# [Wisp](./)
 
-**table of contents**
+- Menu 01
+- Menu 02
+- Menu 03
+- [Markdown Cheatsheet](markdown.md)
 
-<div class="toc"></div>
+Menu 01
+
+Menu 02
+
+Menu 03
 ```
+
 
 ### footer(footer.md)
 
