@@ -1,69 +1,73 @@
 <!DOCTYPE html>
 <html lang="ja">
-  <head>
-    <meta charset="utf-8" />
-    <title>Wisp - A Client-side Flat File CMS</title>
-    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-    <link
-      rel="stylesheet"
-      href="//fonts.googleapis.com/css?family=Roboto:300,300italic,400,400italic,700,700italic"
-    />
-    <script src="./assets/js/wisp.js"></script>
-    <link rel="stylesheet" href="./assets/css/default.css" />
-  </head>
-  <body>
-    <div id="header"></div>
-    <div id="body">
-      <div id="main"></div>
-      <div id="sidebar"></div>
-    </div>
-    <div id="footer"></div>
 
-    <script>
-      // load extentions
-      const wisp_navbar = new WispNavBar("menu_icon");
-      const wisp_highlight = new WispHighlight();
-      const wisp_math = new WispMathJax();
-      const wisp_chart = new WispChart();
-      const wisp_flowchart = new WispFlowChart();
-      const wisp_diagram = new WispSequenceDiagram();
+<head>
+  <meta charset="utf-8" />
+  <title>Wisp - A Client-side Flat File CMS</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:300,300italic,400,400italic,700,700italic" />
+  <script src="./assets/js/wisp.min.js"></script>
+  <link rel="stylesheet" href="./assets/css/default.css" />
+</head>
 
-      window.onload = function() {
-        // init header
-        const header = new Wisp("header");
+<body>
+  <div id="header"></div>
+  <div id="body">
+    <div id="main"></div>
+    <div id="sidebar"></div>
+  </div>
+  <div id="footer"></div>
+  <script>
+    // load extentions
+    const wisp_navbar = new WispNavBar("menu_icon");
+    const wisp_highlight = new WispHighlight();
+    const wisp_math = new WispMathJax();
+    const wisp_chart = new WispChart();
+    const wisp_flowchart = new WispFlowChart();
+    const wisp_diagram = new WispSequenceDiagram();
 
-        // append extensions to header
-        wisp_navbar.append(header);
+    window.onload = function () {
+      // init header
+      const header = new Wisp("header", {
+        inner_link_target: "main"
+      });
 
-        // load header
-        header.load("header.md");
+      // append extensions to header
+      wisp_navbar.append(header);
 
-        // init sidebar
-        const sidebar = new Wisp("sidebar");
+      // load header
+      header.load("./header.md");
 
-        // load sidebar
-        sidebar.load("sidebar.md");
+      // init main
+      const main = new Wisp("main");
+      main.post_content_load_hook(function (id, content) {
+        var h1 = document.querySelectorAll(`#${id} h1`);
+        if (h1.length > 0) {
+          document.title = h1[0].textContent;
+        }
+        var link = document.querySelectorAll('a[href^="http"]');
+        for (var i = 0, ln = link.length; i < ln; i++) {
+          link[i].target = "_blank";
+        }
+      });
 
-        // init main
-        const main = new Wisp("main");
+      // append extensions to main
+      wisp_highlight.append(main);
+      wisp_math.append(main);
+      wisp_chart.append(main);
+      wisp_flowchart.append(main);
+      wisp_diagram.append(main);
 
-        // append extensions to main
-        wisp_highlight.append(main);
-        wisp_math.append(main);
-        wisp_chart.append(main);
-        wisp_flowchart.append(main);
-        wisp_diagram.append(main);
+      const toc = new WispToc(main);
+      toc.append(main);
 
-        const toc = new WispToc(main);
-        toc.append(main);
-        toc.append(sidebar);
+      // load main
+      main.load("index.md");
 
-        // load main
-        main.load("index.md");
+      const footer = new Wisp("footer");
+      footer.load("footer.md");
+    };
+  </script>
+</body>
 
-        const footer = new Wisp("footer");
-        footer.load("footer.md");
-      };
-    </script>
-  </body>
 </html>

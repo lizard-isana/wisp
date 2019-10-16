@@ -1,587 +1,8 @@
-/*! Wisp https://github.com/lizard-isana/wisp @license MIT */
-
-var Willo = Willo || {}
-
-Willo.Storage = {};
-Willo.Storage.loaded_page_num = Willo.Storage.loaded_page_num || 0;
-Willo.Storage.GlobalPageLoadHook = []
-
-Willo.DataLoader = function (option) {
-  var XMLhttpObject;
-  var createXMLhttpObject = function () {
-    XMLhttpObject = false;
-    if (window.XMLHttpRequest) {
-      XMLhttpObject = new XMLHttpRequest();
-    } else if (window.ActiveXObject) {
-      try {
-        XMLhttpObject = new ActiveXObject("Msxml2.XMLHTTP");
-      } catch (e) {
-        if (console) { console.log(e) }
-        XMLhttpObject = new ActiveXObject("Microsoft.XMLHTTP");
-      }
-    }
-    return XMLhttpObject;
-  }
-
-  var Loader = function (option) {
-    XMLhttpObject = createXMLhttpObject();
-    if (!XMLhttpObject) { return; }
-    XMLhttpObject.open("GET", option.path, option.ajax);
-    XMLhttpObject.send(null);
-    if (option.ajax == false) {
-      try {
-        if (option.format === "json") {
-          var data = JSON.parse(XMLhttpObject.responseText);
-        } else {
-          var data = XMLhttpObject.responseText;
-        }
-        if (option.callback !== undefined) {
-          option.callback(data, option.id);
-        } else {
-          return data;
-        }
-      } catch (e) {
-        if (console) { console.log(e) }
-        return;
-      }
-    } else {
-      try {
-        XMLhttpObject.onreadystatechange = function () {
-          if (XMLhttpObject.readyState == 4) {
-            if (XMLhttpObject.status == 200) {
-              if (option.format === "json") {
-                var data = JSON.parse(XMLhttpObject.responseText);
-              } else {
-                var data = XMLhttpObject.responseText;
-              }
-              if (option.callback) {
-                option.callback(data, option.id);
-              } else {
-                return data;
-              }
-            }
-          } else {
-            return;
-          }
-        }
-      } catch (e) {
-        if (console) { console.log(e) }
-        return;
-      }
-    }
-  }
-  return Loader(option);
-}
-
-Willo.QueryDecoder = function () {
-  var query = [];
-  var search = decodeURIComponent(location.search);
-  var q = search.replace(/^\?/, '&').split("&");
-  for (var i = 1, l = q.length; i < l; i++) {
-    var tmp_array = q[i].split("=");
-    var name = tmp_array[0];
-    var value = tmp_array[1];
-    if (value === "true") {
-      value = true;
-    } else if (value === "false") {
-      value = false;
-    }
-    query[name] = value;
-  }
-  return query;
-}
-
-
-Willo.Wisp = Willo.Wisp || function (id, option) {
-  var Storage = {}
-
-  var ResourceLoader = function (array, storage, callback) {
-    Storage.loaded_data_num = 0;
-    const lng = array.length
-    for (const value of array) {
-      var loader = new Willo.DataLoader({
-        format: "text",
-        path: value + "?nocache=" + new Date().getTime(),
-        id: value,
-        ajax: true, // or "false"
-        callback: function (data, id) {
-          storage[id] = data;
-          var catcher = new ResourceCatcher(lng, callback);
-        }
-      })
-    }
-  }
-
-  var ResourceCatcher = function (length, callback) {
-    Storage.loaded_data_num += 1
-    if (Storage.loaded_data_num == length) {
-      callback()
-    }
-  }
-
-  var Initialize = function (id, option) {
-    Storage.renderer = Storage.renderer || {};
-    Storage.format = "markdown";
-    Storage.permit_query = true;
-    Storage.query_path = "./";
-    Storage.renderer = new marked.Renderer();
-    Storage.inner_link_target = id;
-    Storage.new_window = true;
-    Storage.marked_options = {
-      renderer: Storage.renderer,
-      gfm: true,
-      tables: true,
-      breaks: true,
-      pedantic: false,
-      sanitize: false,
-      smartLists: true,
-      smartypants: false
-    }
-
-    Storage.element_id = id;
-    if (option) {
-      if (option.format) {
-        Storage.format = format;
-      }
-      if (option.query) {
-        Storage.permit_query = option.query;
-        if (option.query_path) {
-          Storage.query_path = option.query_path;
-        };
-      };
-      if (option.marked_options) {
-        Storage.marked_options = option.marked_options;
-      };
-      if (option.inner_link_target) {
-        Storage.inner_link_target = option.inner_link_target;
-      };
-    }
-    marked.setOptions(Storage.marked_options);
-  }
-
-  Storage.PreRenderingHook = []
-  this.add_pre_rendering_hook = function (f) {
-    Storage.PreRenderingHook.push(f)
-  }
-
-  Storage.CodeHighlightHook = []
-  this.add_code_highlight_hook = function (f) {
-    Storage.CodeHighlightHook.push(f)
-  }
-
-  Storage.PostRenderingHook = []
-  this.add_post_rendering_hook = function (f) {
-    Storage.PostRenderingHook.push(f)
-  }
-
-  Storage.PostContentLoadHook = []
-  this.add_post_content_load_hook = function (f) {
-    Storage.PostContentLoadHook.push(f)
-  }
-
-  Willo.Storage.PostPageLoadHook = Willo.Storage.PostPageLoadHook || []
-  this.add_post_page_load_hook = function (f) {
-    Willo.Storage.PostPageLoadHook.push(f)
-  }
-
-  this.id = id;
-  this.load_page = function (list) {
-    var query = Willo.QueryDecoder();
-
-    Storage.contents = {};
-    var content_list = [];
-    var path = list[0].split("/");
-    if (path.length > 1) {
-      var tmp_array = path.pop()
-      var default_dir = path.join("/") + "/"
-    } else {
-      var default_dir = "./"
-    }
-
-    if (Object.keys(query).length > 0) {
-      for (let key in query) {
-        if (key == Storage.element_id) {
-          var content_list = []
-          var tmp = query[key].split(",");
-          for (let value in tmp) {
-            var target = default_dir + tmp[value].split("/").reverse()[0]
-            content_list.push(target);
-          }
-          break;
-        } else {
-          content_list = list;
-        }
-      }
-    } else {
-      content_list = list;
-    }
-
-    Willo.Storage.loaded_page_num += content_list.length;
-    Willo.Storage.display_page_num = Willo.Storage.display_page_num || 0;
-    if (content_list.length > 0) {
-      var loader = new ResourceLoader(content_list, Storage.contents, function (data) {
-        var page_content = []
-        for (let value in content_list) {
-          var content = content_list[value]
-          page_content.push(Storage.contents[content])
-          Willo.Storage.display_page_num++;
-        }
-        var merged_page_content = page_content.join("\n")
-
-        if (Storage.PreRenderingHook.length > 0) {
-          for (const i in Storage.PreRenderingHook) {
-            merged_page_content = Storage.PreRenderingHook[i](Storage.element_id, merged_page_content)
-          }
-        };
-        if (Storage.format == "raw") {
-          document.getElementById(Storage.element_id).innerHTML = merged_page_content;
-        } else {
-          marked.setOptions({
-            highlight: function (code, lang) {
-              if (Storage.CodeHighlightHook.length > 0) {
-                for (const i in Storage.CodeHighlightHook) {
-                  code = Storage.CodeHighlightHook[i](Storage.element_id, code, lang)
-                }
-              }
-              return code
-            }
-          });
-          var marked_page_content = marked(merged_page_content)
-
-          if (Storage.PostRenderingHook.length > 0) {
-            for (const i in Storage.PostRenderingHook) {
-              marked_page_content = Storage.PostRenderingHook[i](Storage.element_id, marked_page_content);
-            }
-          }
-          var element = document.getElementById(Storage.element_id);
-          element.innerHTML = marked_page_content;
-
-          var link = element.querySelectorAll("a");
-          for (var i = 0, ln = link.length; i < ln; i++) {
-            var href = link[i].getAttribute("href");
-            if (href.match(/^(?!http(|s))/) && href.match(/^(?!.*(\/|=)).*/)) {
-              link[i].href = "?" + Storage.inner_link_target + "=" + href;
-            }
-          }
-        }
-        if (Storage.PostContentLoadHook.length > 0) {
-          for (const i in Storage.PostContentLoadHook) {
-            Storage.PostContentLoadHook[i](Storage.element_id, marked_page_content);
-          }
-        }
-        if (Willo.Storage.display_page_num == Willo.Storage.loaded_page_num) {
-          for (const i in Willo.Storage.PostPageLoadHook) {
-            Willo.Storage.PostPageLoadHook[i]();
-          }
-        }
-      })
-    }
-  }
-  Initialize(id, option)
-}
-
-Willo.Wisp.prototype = {
-  pre_rendering_hook: function (f) {
-    this.add_pre_rendering_hook(f)
-  },
-  code_highlight_hook: function (f) {
-    this.add_code_highlight_hook(f)
-  },
-  post_rendering_hook: function (f) {
-    this.add_post_rendering_hook(f)
-  },
-  post_content_load_hook: function (f) {
-    this.add_post_content_load_hook(f)
-  },
-  post_page_load_hook: function (f) {
-    this.add_post_page_load_hook(f)
-  },
-  load: function (param) {
-    if (Array.isArray(param)) {
-      var content_list = param;
-    } else if (typeof (param) == "string") {
-      var content_list = [param]
-    } else {
-      var content_list = ["index.md"]
-    }
-    this.load_page(content_list)
-  }
-}
-
-var Wisp = Willo.Wisp
-
-/*! markdown-it 10.0.0 https://github.com//markdown-it/markdown-it @license MIT */(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.markdownit = f()}})(function(){var define,module,exports;return (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
-// HTML5 entities map: { name -> utf16string }
-//
-'use strict';
-
-/*eslint quotes:0*/
-module.exports = require('entities/lib/maps/entities.json');
-
-},{"entities/lib/maps/entities.json":52}],2:[function(require,module,exports){
-// List of valid html blocks names, accorting to commonmark spec
-// http://jgm.github.io/CommonMark/spec.html#html-blocks
-
-'use strict';
-
-
-module.exports = [
-  'address',
-  'article',
-  'aside',
-  'base',
-  'basefont',
-  'blockquote',
-  'body',
-  'caption',
-  'center',
-  'col',
-  'colgroup',
-  'dd',
-  'details',
-  'dialog',
-  'dir',
-  'div',
-  'dl',
-  'dt',
-  'fieldset',
-  'figcaption',
-  'figure',
-  'footer',
-  'form',
-  'frame',
-  'frameset',
-  'h1',
-  'h2',
-  'h3',
-  'h4',
-  'h5',
-  'h6',
-  'head',
-  'header',
-  'hr',
-  'html',
-  'iframe',
-  'legend',
-  'li',
-  'link',
-  'main',
-  'menu',
-  'menuitem',
-  'meta',
-  'nav',
-  'noframes',
-  'ol',
-  'optgroup',
-  'option',
-  'p',
-  'param',
-  'section',
-  'source',
-  'summary',
-  'table',
-  'tbody',
-  'td',
-  'tfoot',
-  'th',
-  'thead',
-  'title',
-  'tr',
-  'track',
-  'ul'
-];
-
-},{}],3:[function(require,module,exports){
-// Regexps to match html elements
-
-'use strict';
-
-var attr_name     = '[a-zA-Z_:][a-zA-Z0-9:._-]*';
-
-var unquoted      = '[^"\'=<>`\\x00-\\x20]+';
-var single_quoted = "'[^']*'";
-var double_quoted = '"[^"]*"';
-
-var attr_value  = '(?:' + unquoted + '|' + single_quoted + '|' + double_quoted + ')';
-
-var attribute   = '(?:\\s+' + attr_name + '(?:\\s*=\\s*' + attr_value + ')?)';
-
-var open_tag    = '<[A-Za-z][A-Za-z0-9\\-]*' + attribute + '*\\s*\\/?>';
-
-var close_tag   = '<\\/[A-Za-z][A-Za-z0-9\\-]*\\s*>';
-var comment     = '<!---->|<!--(?:-?[^>-])(?:-?[^-])*-->';
-var processing  = '<[?].*?[?]>';
-var declaration = '<![A-Z]+\\s+[^>]*>';
-var cdata       = '<!\\[CDATA\\[[\\s\\S]*?\\]\\]>';
-
-var HTML_TAG_RE = new RegExp('^(?:' + open_tag + '|' + close_tag + '|' + comment +
-                        '|' + processing + '|' + declaration + '|' + cdata + ')');
-var HTML_OPEN_CLOSE_TAG_RE = new RegExp('^(?:' + open_tag + '|' + close_tag + ')');
-
-module.exports.HTML_TAG_RE = HTML_TAG_RE;
-module.exports.HTML_OPEN_CLOSE_TAG_RE = HTML_OPEN_CLOSE_TAG_RE;
-
-},{}],4:[function(require,module,exports){
-// Utilities
-//
-'use strict';
-
-
-function _class(obj) { return Object.prototype.toString.call(obj); }
-
-function isString(obj) { return _class(obj) === '[object String]'; }
-
-var _hasOwnProperty = Object.prototype.hasOwnProperty;
-
-function has(object, key) {
-  return _hasOwnProperty.call(object, key);
-}
-
-// Merge objects
-//
-function assign(obj /*from1, from2, from3, ...*/) {
-  var sources = Array.prototype.slice.call(arguments, 1);
-
-  sources.forEach(function (source) {
-    if (!source) { return; }
-
-    if (typeof source !== 'object') {
-      throw new TypeError(source + 'must be object');
-    }
-
-    Object.keys(source).forEach(function (key) {
-      obj[key] = source[key];
-    });
-  });
-
-  return obj;
-}
-
-// Remove element from array and put another array at those position.
-// Useful for some operations with tokens
-function arrayReplaceAt(src, pos, newElements) {
-  return [].concat(src.slice(0, pos), newElements, src.slice(pos + 1));
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
-function isValidEntityCode(c) {
-  /*eslint no-bitwise:0*/
-  // broken sequence
-  if (c >= 0xD800 && c <= 0xDFFF) { return false; }
-  // never used
-  if (c >= 0xFDD0 && c <= 0xFDEF) { return false; }
-  if ((c & 0xFFFF) === 0xFFFF || (c & 0xFFFF) === 0xFFFE) { return false; }
-  // control codes
-  if (c >= 0x00 && c <= 0x08) { return false; }
-  if (c === 0x0B) { return false; }
-  if (c >= 0x0E && c <= 0x1F) { return false; }
-  if (c >= 0x7F && c <= 0x9F) { return false; }
-  // out of range
-  if (c > 0x10FFFF) { return false; }
-  return true;
-}
-
-function fromCodePoint(c) {
-  /*eslint no-bitwise:0*/
-  if (c > 0xffff) {
-    c -= 0x10000;
-    var surrogate1 = 0xd800 + (c >> 10),
-        surrogate2 = 0xdc00 + (c & 0x3ff);
-
-    return String.fromCharCode(surrogate1, surrogate2);
-  }
-  return String.fromCharCode(c);
-}
-
-
-var UNESCAPE_MD_RE  = /\\([!"#$%&'()*+,\-.\/:;<=>?@[\\\]^_`{|}~])/g;
-var ENTITY_RE       = /&([a-z#][a-z0-9]{1,31});/gi;
-var UNESCAPE_ALL_RE = new RegExp(UNESCAPE_MD_RE.source + '|' + ENTITY_RE.source, 'gi');
-
-var DIGITAL_ENTITY_TEST_RE = /^#((?:x[a-f0-9]{1,8}|[0-9]{1,8}))/i;
-
-var entities = require('./entities');
-
-function replaceEntityPattern(match, name) {
-  var code = 0;
-
-  if (has(entities, name)) {
-    return entities[name];
-  }
-
-  if (name.charCodeAt(0) === 0x23/* # */ && DIGITAL_ENTITY_TEST_RE.test(name)) {
-    code = name[1].toLowerCase() === 'x' ?
-      parseInt(name.slice(2), 16) : parseInt(name.slice(1), 10);
-
-    if (isValidEntityCode(code)) {
-      return fromCodePoint(code);
-    }
-  }
-
-  return match;
-}
-
-/*function replaceEntities(str) {
-  if (str.indexOf('&') < 0) { return str; }
-
-  return str.replace(ENTITY_RE, replaceEntityPattern);
-}*/
-
-function unescapeMd(str) {
-  if (str.indexOf('\\') < 0) { return str; }
-  return str.replace(UNESCAPE_MD_RE, '$1');
-}
-
-function unescapeAll(str) {
-  if (str.indexOf('\\') < 0 && str.indexOf('&') < 0) { return str; }
-
-  return str.replace(UNESCAPE_ALL_RE, function (match, escaped, entity) {
-    if (escaped) { return escaped; }
-    return replaceEntityPattern(match, entity);
-  });
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
-var HTML_ESCAPE_TEST_RE = /[&<>"]/;
-var HTML_ESCAPE_REPLACE_RE = /[&<>"]/g;
-var HTML_REPLACEMENTS = {
-  '&': '&amp;',
-  '<': '&lt;',
-  '>': '&gt;',
-  '"': '&quot;'
-};
-
-function replaceUnsafeChar(ch) {
-  return HTML_REPLACEMENTS[ch];
-}
-
-function escapeHtml(str) {
-  if (HTML_ESCAPE_TEST_RE.test(str)) {
-    return str.replace(HTML_ESCAPE_REPLACE_RE, replaceUnsafeChar);
-  }
-  return str;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
-var REGEXP_ESCAPE_RE = /[.?*+^$[\]\\(){}|-]/g;
-
-function escapeRE(str) {
-  return str.replace(REGEXP_ESCAPE_RE, '\\$&');
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
-function isSpace(code) {
-  switch (code) {
-    case 0x09:
-    case 0x20:
-      return true;
-  }
-  return false;
-}
+/*!
+ * marked - a markdown parser
+ * Copyright (c) 2011-2018, Christopher Jeffrey. (MIT Licensed)
+ * https://github.com/markedjs/marked
+ */
 
 ; (function (root) {
   'use strict';
@@ -665,75 +86,20 @@ function isSpace(code) {
     .replace('paragraph', block.paragraph)
     .getRegex();
 
-// Currently without astral characters support.
-function isPunctChar(ch) {
-  return UNICODE_PUNCT_RE.test(ch);
-}
+  /**
+   * Normal Block Grammar
+   */
 
+  block.normal = merge({}, block);
 
-// Markdown ASCII punctuation characters.
-//
-// !, ", #, $, %, &, ', (, ), *, +, ,, -, ., /, :, ;, <, =, >, ?, @, [, \, ], ^, _, `, {, |, }, or ~
-// http://spec.commonmark.org/0.15/#ascii-punctuation-character
-//
-// Don't confuse with unicode punctuation !!! It lacks some chars in ascii range.
-//
-function isMdAsciiPunct(ch) {
-  switch (ch) {
-    case 0x21/* ! */:
-    case 0x22/* " */:
-    case 0x23/* # */:
-    case 0x24/* $ */:
-    case 0x25/* % */:
-    case 0x26/* & */:
-    case 0x27/* ' */:
-    case 0x28/* ( */:
-    case 0x29/* ) */:
-    case 0x2A/* * */:
-    case 0x2B/* + */:
-    case 0x2C/* , */:
-    case 0x2D/* - */:
-    case 0x2E/* . */:
-    case 0x2F/* / */:
-    case 0x3A/* : */:
-    case 0x3B/* ; */:
-    case 0x3C/* < */:
-    case 0x3D/* = */:
-    case 0x3E/* > */:
-    case 0x3F/* ? */:
-    case 0x40/* @ */:
-    case 0x5B/* [ */:
-    case 0x5C/* \ */:
-    case 0x5D/* ] */:
-    case 0x5E/* ^ */:
-    case 0x5F/* _ */:
-    case 0x60/* ` */:
-    case 0x7B/* { */:
-    case 0x7C/* | */:
-    case 0x7D/* } */:
-    case 0x7E/* ~ */:
-      return true;
-    default:
-      return false;
-  }
-}
+  /**
+   * GFM Block Grammar
+   */
 
-// Hepler to unify [reference labels].
-//
-function normalizeReference(str) {
-  // Trim and collapse whitespace
-  //
-  str = str.trim().replace(/\s+/g, ' ');
-
-  // In node v10 'ẞ'.toLowerCase() === 'Ṿ', which is presumed to be a bug
-  // fixed in v12 (couldn't find any details).
-  //
-  // So treat this one as a special case
-  // (remove this when node v10 is no longer supported).
-  //
-  if ('ẞ'.toLowerCase() === 'Ṿ') {
-    str = str.replace(/ẞ/g, 'ß');
-  }
+  block.gfm = merge({}, block.normal, {
+    nptable: /^ *([^|\n ].*\|.*)\n *([-:]+ *\|[-| :]*)(?:\n((?:.*[^>\n ].*(?:\n|$))*)\n*|$)/,
+    table: /^ *\|(.+)\n *\|?( *[-:]+[-| :]*)(?:\n((?: *[^>\n ].*(?:\n|$))*)\n*|$)/
+  });
 
   /**
    * Pedantic grammar (original John Gruber's loose markdown specification)
@@ -764,112 +130,49 @@ function normalizeReference(str) {
       .getRegex()
   });
 
-////////////////////////////////////////////////////////////////////////////////
+  /**
+   * Block Lexer
+   */
 
-// Re-export libraries commonly used in both markdown-it and its plugins,
-// so plugins won't have to depend on them explicitly, which reduces their
-// bundled size (e.g. a browser build).
-//
-exports.lib                 = {};
-exports.lib.mdurl           = require('mdurl');
-exports.lib.ucmicro         = require('uc.micro');
+  function Lexer(options) {
+    this.tokens = [];
+    this.tokens.links = Object.create(null);
+    this.options = options || marked.defaults;
+    this.rules = block.normal;
 
-exports.assign              = assign;
-exports.isString            = isString;
-exports.has                 = has;
-exports.unescapeMd          = unescapeMd;
-exports.unescapeAll         = unescapeAll;
-exports.isValidEntityCode   = isValidEntityCode;
-exports.fromCodePoint       = fromCodePoint;
-// exports.replaceEntities     = replaceEntities;
-exports.escapeHtml          = escapeHtml;
-exports.arrayReplaceAt      = arrayReplaceAt;
-exports.isSpace             = isSpace;
-exports.isWhiteSpace        = isWhiteSpace;
-exports.isMdAsciiPunct      = isMdAsciiPunct;
-exports.isPunctChar         = isPunctChar;
-exports.escapeRE            = escapeRE;
-exports.normalizeReference  = normalizeReference;
-
-},{"./entities":1,"mdurl":58,"uc.micro":65,"uc.micro/categories/P/regex":63}],5:[function(require,module,exports){
-// Just a shortcut for bulk export
-'use strict';
-
-
-exports.parseLinkLabel       = require('./parse_link_label');
-exports.parseLinkDestination = require('./parse_link_destination');
-exports.parseLinkTitle       = require('./parse_link_title');
-
-},{"./parse_link_destination":6,"./parse_link_label":7,"./parse_link_title":8}],6:[function(require,module,exports){
-// Parse link destination
-//
-'use strict';
-
-
-var unescapeAll = require('../common/utils').unescapeAll;
-
-
-module.exports = function parseLinkDestination(str, pos, max) {
-  var code, level,
-      lines = 0,
-      start = pos,
-      result = {
-        ok: false,
-        pos: 0,
-        lines: 0,
-        str: ''
-      };
-
-  if (str.charCodeAt(pos) === 0x3C /* < */) {
-    pos++;
-    while (pos < max) {
-      code = str.charCodeAt(pos);
-      if (code === 0x0A /* \n */) { return result; }
-      if (code === 0x3E /* > */) {
-        result.pos = pos + 1;
-        result.str = unescapeAll(str.slice(start + 1, pos));
-        result.ok = true;
-        return result;
-      }
-      if (code === 0x5C /* \ */ && pos + 1 < max) {
-        pos += 2;
-        continue;
-      }
-
-      pos++;
+    if (this.options.pedantic) {
+      this.rules = block.pedantic;
+    } else if (this.options.gfm) {
+      this.rules = block.gfm;
     }
-
-    // no closing '>'
-    return result;
   }
 
-  // this should be ... } else { ... branch
+  /**
+   * Expose Block Rules
+   */
 
-  level = 0;
-  while (pos < max) {
-    code = str.charCodeAt(pos);
+  Lexer.rules = block;
 
-    if (code === 0x20) { break; }
+  /**
+   * Static Lex Method
+   */
 
   Lexer.lex = function (src, options) {
     var lexer = new Lexer(options);
     return lexer.lex(src);
   };
 
-    if (code === 0x5C /* \ */ && pos + 1 < max) {
-      pos += 2;
-      continue;
-    }
+  /**
+   * Preprocessing
+   */
 
   Lexer.prototype.lex = function (src) {
     src = src
       .replace(/\r\n|\r/g, '\n')
       .replace(/\t/g, '    ');
 
-    if (code === 0x29 /* ) */) {
-      if (level === 0) { break; }
-      level--;
-    }
+    return this.token(src, true);
+  };
 
   /**
    * Lexing
@@ -935,7 +238,6 @@ module.exports = function parseLinkDestination(str, pos, max) {
         });
         continue;
       }
-    }
 
       // heading
       if (cap = this.rules.heading.exec(src)) {
@@ -947,8 +249,6 @@ module.exports = function parseLinkDestination(str, pos, max) {
         });
         continue;
       }
-    }
-  }
 
       // table no leading pipe (gfm)
       if (cap = this.rules.nptable.exec(src)) {
@@ -959,8 +259,8 @@ module.exports = function parseLinkDestination(str, pos, max) {
           cells: cap[3] ? cap[3].replace(/\n$/, '').split('\n') : []
         };
 
-  // restore old state
-  state.pos = oldPos;
+        if (item.header.length === item.align.length) {
+          src = src.substring(cap[0].length);
 
           for (i = 0; i < item.align.length; i++) {
             if (/^ *-+: *$/.test(item.align[i])) {
@@ -974,13 +274,15 @@ module.exports = function parseLinkDestination(str, pos, max) {
             }
           }
 
-},{}],8:[function(require,module,exports){
-// Parse link title
-//
-'use strict';
+          for (i = 0; i < item.cells.length; i++) {
+            item.cells[i] = splitCells(item.cells[i], item.header.length);
+          }
 
+          this.tokens.push(item);
 
-var unescapeAll = require('../common/utils').unescapeAll;
+          continue;
+        }
+      }
 
       // hr
       if (cap = this.rules.hr.exec(src)) {
@@ -1001,28 +303,17 @@ var unescapeAll = require('../common/utils').unescapeAll;
 
         cap = cap[0].replace(/^ *> ?/gm, '');
 
-  pos++;
+        // Pass `top` to keep the current
+        // "toplevel" state. This is exactly
+        // how markdown.pl works.
+        this.token(cap, top);
 
         this.tokens.push({
           type: 'blockquote_end'
         });
 
-  while (pos < max) {
-    code = str.charCodeAt(pos);
-    if (code === marker) {
-      result.pos = pos + 1;
-      result.lines = lines;
-      result.str = unescapeAll(str.slice(start + 1, pos));
-      result.ok = true;
-      return result;
-    } else if (code === 0x0A) {
-      lines++;
-    } else if (code === 0x5C /* \ */ && pos + 1 < max) {
-      pos++;
-      if (str.charCodeAt(pos) === 0x0A) {
-        lines++;
+        continue;
       }
-    }
 
       // list
       if (cap = this.rules.list.exec(src)) {
@@ -1037,21 +328,18 @@ var unescapeAll = require('../common/utils').unescapeAll;
           loose: false
         };
 
-},{"../common/utils":4}],9:[function(require,module,exports){
-// Main parser class
+        this.tokens.push(listStart);
 
-'use strict';
+        // Get each top-level item.
+        cap = cap[0].match(this.rules.item);
 
+        listItems = [];
+        next = false;
+        l = cap.length;
+        i = 0;
 
-var utils        = require('./common/utils');
-var helpers      = require('./helpers');
-var Renderer     = require('./renderer');
-var ParserCore   = require('./parser_core');
-var ParserBlock  = require('./parser_block');
-var ParserInline = require('./parser_inline');
-var LinkifyIt    = require('linkify-it');
-var mdurl        = require('mdurl');
-var punycode     = require('punycode');
+        for (; i < l; i++) {
+          item = cap[i];
 
           // Remove the list item's bullet
           // so it is seen as the next token.
@@ -1087,9 +375,9 @@ var punycode     = require('punycode');
             if (!loose) loose = next;
           }
 
-function validateLink(url) {
-  // url should be normalized at this point, and existing entities are decoded
-  var str = url.trim().toLowerCase();
+          if (loose) {
+            listStart.loose = true;
+          }
 
           // Check for task list items
           istask = /^\[[ xX]\] /.test(item);
@@ -1106,48 +394,31 @@ function validateLink(url) {
             loose: loose
           };
 
+          listItems.push(t);
+          this.tokens.push(t);
 
-var RECODE_HOSTNAME_FOR = [ 'http:', 'https:', 'mailto:' ];
+          // Recurse.
+          this.token(item, false);
 
           this.tokens.push({
             type: 'list_item_end'
           });
         }
 
-  if (parsed.hostname) {
-    // Encode hostnames in urls like:
-    // `http://host/`, `https://host/`, `mailto:user@host`, `//host/`
-    //
-    // We don't encode unknown schemas, because it's likely that we encode
-    // something we shouldn't (e.g. `skype:name` treated as `skype:host`)
-    //
-    if (!parsed.protocol || RECODE_HOSTNAME_FOR.indexOf(parsed.protocol) >= 0) {
-      try {
-        parsed.hostname = punycode.toASCII(parsed.hostname);
-      } catch (er) { /**/ }
-    }
-  }
+        if (listStart.loose) {
+          l = listItems.length;
+          i = 0;
+          for (; i < l; i++) {
+            listItems[i].loose = true;
+          }
+        }
 
         this.tokens.push({
           type: 'list_end'
         });
 
-function normalizeLinkText(url) {
-  var parsed = mdurl.parse(url, true);
-
-  if (parsed.hostname) {
-    // Encode hostnames in urls like:
-    // `http://host/`, `https://host/`, `mailto:user@host`, `//host/`
-    //
-    // We don't encode unknown schemas, because it's likely that we encode
-    // something we shouldn't (e.g. `skype:name` treated as `skype:host`)
-    //
-    if (!parsed.protocol || RECODE_HOSTNAME_FOR.indexOf(parsed.protocol) >= 0) {
-      try {
-        parsed.hostname = punycode.toUnicode(parsed.hostname);
-      } catch (er) { /**/ }
-    }
-  }
+        continue;
+      }
 
       // html
       if (cap = this.rules.html.exec(src)) {
@@ -1186,14 +457,8 @@ function normalizeLinkText(url) {
           cells: cap[3] ? cap[3].replace(/\n$/, '').split('\n') : []
         };
 
-  /**
-   * MarkdownIt#inline -> ParserInline
-   *
-   * Instance of [[ParserInline]]. You may need it to add new rules when
-   * writing plugins. For simple rules control use [[MarkdownIt.disable]] and
-   * [[MarkdownIt.enable]].
-   **/
-  this.inline = new ParserInline();
+        if (item.header.length === item.align.length) {
+          src = src.substring(cap[0].length);
 
           for (i = 0; i < item.align.length; i++) {
             if (/^ *-+: *$/.test(item.align[i])) {
@@ -1213,37 +478,11 @@ function normalizeLinkText(url) {
               item.header.length);
           }
 
-  /**
-   * MarkdownIt#renderer -> Renderer
-   *
-   * Instance of [[Renderer]]. Use it to modify output look. Or to add rendering
-   * rules for new token types, generated by plugins.
-   *
-   * ##### Example
-   *
-   * ```javascript
-   * var md = require('markdown-it')();
-   *
-   * function myToken(tokens, idx, options, env, self) {
-   *   //...
-   *   return result;
-   * };
-   *
-   * md.renderer.rules['my_token'] = myToken
-   * ```
-   *
-   * See [[Renderer]] docs and [source code](https://github.com/markdown-it/markdown-it/blob/master/lib/renderer.js).
-   **/
-  this.renderer = new Renderer();
+          this.tokens.push(item);
 
-  /**
-   * MarkdownIt#linkify -> LinkifyIt
-   *
-   * [linkify-it](https://github.com/markdown-it/linkify-it) instance.
-   * Used by [linkify](https://github.com/markdown-it/markdown-it/blob/master/lib/rules_core/linkify.js)
-   * rule.
-   **/
-  this.linkify = new LinkifyIt();
+          continue;
+        }
+      }
 
       // lheading
       if (cap = this.rules.lheading.exec(src)) {
@@ -1284,7 +523,8 @@ function normalizeLinkText(url) {
       }
     }
 
-  // Expose utils & helpers for easy acces from plugins
+    return this.tokens;
+  };
 
   /**
    * Inline-Level Grammar
@@ -1325,14 +565,16 @@ function normalizeLinkText(url) {
     .replace('email', inline._email)
     .getRegex();
 
-  this.options = {};
-  this.configure(presetName);
+  inline._attribute = /\s+[a-zA-Z:_][\w.:-]*(?:\s*=\s*"[^"]*"|\s*=\s*'[^']*'|\s*=\s*[^\s"'=<>`]+)?/;
 
   inline.tag = edit(inline.tag)
     .replace('comment', block._comment)
     .replace('attribute', inline._attribute)
     .getRegex();
 
+  inline._label = /(?:\[[^\[\]]*\]|\\.|`[^`]*`|[^\[\]\\`])*?/;
+  inline._href = /<(?:\\[<>]?|[^\s<>\\])*>|[^\s\x00-\x1f]*/;
+  inline._title = /"(?:\\"?|[^"\\])*"|'(?:\\'?|[^'\\])*'|\((?:\\\)?|[^)\\])*\)/;
 
   inline.link = edit(inline.link)
     .replace('label', inline._label)
@@ -1344,26 +586,11 @@ function normalizeLinkText(url) {
     .replace('label', inline._label)
     .getRegex();
 
-/** chainable, internal
- * MarkdownIt.configure(presets)
- *
- * Batch load of all options and compenent settings. This is internal method,
- * and you probably will not need it. But if you with - see available presets
- * and data structure [here](https://github.com/markdown-it/markdown-it/tree/master/lib/presets)
- *
- * We strongly recommend to use presets instead of direct config loads. That
- * will give better compatibility with next versions.
- **/
-MarkdownIt.prototype.configure = function (presets) {
-  var self = this, presetName;
+  /**
+   * Normal Inline Grammar
+   */
 
-  if (utils.isString(presets)) {
-    presetName = presets;
-    presets = config[presetName];
-    if (!presets) { throw new Error('Wrong `markdown-it` preset "' + presetName + '", check name'); }
-  }
-
-  if (!presets) { throw new Error('Wrong `markdown-it` preset, can\'t be empty'); }
+  inline.normal = merge({}, inline);
 
   /**
    * Pedantic Inline Grammar
@@ -1408,75 +635,50 @@ MarkdownIt.prototype.configure = function (presets) {
       .getRegex()
   });
 
-/** chainable
- * MarkdownIt.enable(list, ignoreInvalid)
- * - list (String|Array): rule name or list of rule names to enable
- * - ignoreInvalid (Boolean): set `true` to ignore errors when rule not found.
- *
- * Enable list or rules. It will automatically find appropriate components,
- * containing rules with given names. If rule not found, and `ignoreInvalid`
- * not set - throws exception.
- *
- * ##### Example
- *
- * ```javascript
- * var md = require('markdown-it')()
- *             .enable(['sub', 'sup'])
- *             .disable('smartquotes');
- * ```
- **/
-MarkdownIt.prototype.enable = function (list, ignoreInvalid) {
-  var result = [];
+  /**
+   * Inline Lexer & Compiler
+   */
 
-  if (!Array.isArray(list)) { list = [ list ]; }
-
-  [ 'core', 'block', 'inline' ].forEach(function (chain) {
-    result = result.concat(this[chain].ruler.enable(list, true));
-  }, this);
-
-  result = result.concat(this.inline.ruler2.enable(list, true));
-
-  var missed = list.filter(function (name) { return result.indexOf(name) < 0; });
-
-  if (missed.length && !ignoreInvalid) {
-    throw new Error('MarkdownIt. Failed to enable unknown rule(s): ' + missed);
-  }
-
-  return this;
-};
+  function InlineLexer(links, options) {
+    this.options = options || marked.defaults;
+    this.links = links;
+    this.rules = inline.normal;
+    this.renderer = this.options.renderer || new Renderer();
+    this.renderer.options = this.options;
 
     if (!this.links) {
       throw new Error('Tokens array requires a `links` property.');
     }
 
-/** chainable
- * MarkdownIt.disable(list, ignoreInvalid)
- * - list (String|Array): rule name or list of rule names to disable.
- * - ignoreInvalid (Boolean): set `true` to ignore errors when rule not found.
- *
- * The same as [[MarkdownIt.enable]], but turn specified rules off.
- **/
-MarkdownIt.prototype.disable = function (list, ignoreInvalid) {
-  var result = [];
+    if (this.options.pedantic) {
+      this.rules = inline.pedantic;
+    } else if (this.options.gfm) {
+      if (this.options.breaks) {
+        this.rules = inline.breaks;
+      } else {
+        this.rules = inline.gfm;
+      }
+    }
+  }
 
-  if (!Array.isArray(list)) { list = [ list ]; }
+  /**
+   * Expose Inline Rules
+   */
 
-  [ 'core', 'block', 'inline' ].forEach(function (chain) {
-    result = result.concat(this[chain].ruler.disable(list, true));
-  }, this);
+  InlineLexer.rules = inline;
 
-  result = result.concat(this.inline.ruler2.disable(list, true));
+  /**
+   * Static Lexing/Compiling Method
+   */
 
   InlineLexer.output = function (src, links, options) {
     var inline = new InlineLexer(links, options);
     return inline.output(src);
   };
 
-  if (missed.length && !ignoreInvalid) {
-    throw new Error('MarkdownIt. Failed to disable unknown rule(s): ' + missed);
-  }
-  return this;
-};
+  /**
+   * Lexing/Compiling
+   */
 
   InlineLexer.prototype.output = function (src) {
     var out = '',
@@ -1508,6 +710,14 @@ MarkdownIt.prototype.disable = function (list, ignoreInvalid) {
           this.inRawBlock = false;
         }
 
+        src = src.substring(cap[0].length);
+        out += this.options.sanitize
+          ? this.options.sanitizer
+            ? this.options.sanitizer(cap[0])
+            : escape(cap[0])
+          : cap[0];
+        continue;
+      }
 
       // link
       if (cap = this.rules.link.exec(src)) {
@@ -1648,21 +858,16 @@ MarkdownIt.prototype.disable = function (list, ignoreInvalid) {
       }
     }
 
-/**
- * MarkdownIt.renderInline(src [, env]) -> String
- * - src (String): source string
- * - env (Object): environment sandbox
- *
- * Similar to [[MarkdownIt.render]] but for single paragraph content. Result
- * will NOT be wrapped into `<p>` tags.
- **/
-MarkdownIt.prototype.renderInline = function (src, env) {
-  env = env || {};
+    return out;
+  };
 
   InlineLexer.escapes = function (text) {
     return text ? text.replace(InlineLexer.rules._escapes, '$1') : text;
   };
 
+  /**
+   * Compile Link
+   */
 
   InlineLexer.prototype.outputLink = function (cap, link) {
     var href = link.href,
@@ -1696,7 +901,9 @@ MarkdownIt.prototype.renderInline = function (src, env) {
       .replace(/\.{3}/g, '\u2026');
   };
 
-var Ruler           = require('./ruler');
+  /**
+   * Mangle Links
+   */
 
   InlineLexer.prototype.mangle = function (text) {
     if (!this.options.mangle) return text;
@@ -1713,22 +920,16 @@ var Ruler           = require('./ruler');
       out += '&#' + ch + ';';
     }
 
+    return out;
+  };
 
-/**
- * new ParserBlock()
- **/
-function ParserBlock() {
   /**
-   * ParserBlock#ruler -> Ruler
-   *
-   * [[Ruler]] instance. Keep configuration of block rules.
-   **/
-  this.ruler = new Ruler();
+   * Renderer
+   */
 
-  for (var i = 0; i < _rules.length; i++) {
-    this.ruler.push(_rules[i][0], _rules[i][1], { alt: (_rules[i][2] || []).slice() });
+  function Renderer(options) {
+    this.options = options || marked.defaults;
   }
-}
 
   Renderer.prototype.code = function (code, infostring, escaped) {
     var lang = (infostring || '').match(/\S*/)[0];
@@ -1880,11 +1081,14 @@ function ParserBlock() {
     return text;
   };
 
-  rules = this.ruler.getRules('');
+  /**
+   * TextRenderer
+   * returns only the textual part of the token
+   */
 
   function TextRenderer() { }
 
-Core.prototype.State = require('./rules_core/state_core');
+  // no need for block level renderers
 
   TextRenderer.prototype.strong =
     TextRenderer.prototype.em =
@@ -1903,9 +1107,23 @@ Core.prototype.State = require('./rules_core/state_core');
     return '';
   };
 
+  /**
+   * Parsing & Compiling
+   */
 
-var Ruler           = require('./ruler');
+  function Parser(options) {
+    this.tokens = [];
+    this.token = null;
+    this.options = options || marked.defaults;
+    this.options.renderer = this.options.renderer || new Renderer();
+    this.renderer = this.options.renderer;
+    this.renderer.options = this.options;
+    this.slugger = new Slugger();
+  }
 
+  /**
+   * Static Parse Method
+   */
 
   Parser.parse = function (src, options) {
     var parser = new Parser(options);
@@ -1930,12 +1148,12 @@ var Ruler           = require('./ruler');
       out += this.tok();
     }
 
+    return out;
+  };
 
-/**
- * new ParserInline()
- **/
-function ParserInline() {
-  var i;
+  /**
+   * Next Token
+   */
 
   Parser.prototype.next = function () {
     this.token = this.tokens.pop();
@@ -1943,32 +1161,16 @@ function ParserInline() {
   };
 
   /**
-   * ParserInline#ruler2 -> Ruler
-   *
-   * [[Ruler]] instance. Second ruler used for post-processing
-   * (e.g. in emphasis-like rules).
-   **/
-  this.ruler2 = new Ruler();
-
-  for (i = 0; i < _rules2.length; i++) {
-    this.ruler2.push(_rules2[i][0], _rules2[i][1]);
-  }
-}
+   * Preview Next Token
+   */
 
   Parser.prototype.peek = function () {
     return this.tokens[this.tokens.length - 1] || 0;
   };
 
-// Skip single token by running all rules in validation mode;
-// returns `true` if any rule reported success
-//
-ParserInline.prototype.skipToken = function (state) {
-  var ok, i, pos = state.pos,
-      rules = this.ruler.getRules(''),
-      len = rules.length,
-      maxNesting = state.md.options.maxNesting,
-      cache = state.cache;
-
+  /**
+   * Parse Text Tokens
+   */
 
   Parser.prototype.parseText = function () {
     var body = this.token.text;
@@ -1976,24 +1178,9 @@ ParserInline.prototype.skipToken = function (state) {
     while (this.peek().type === 'text') {
       body += '\n' + this.next().text;
     }
-  } else {
-    // Too much nesting, just skip until the end of the paragraph.
-    //
-    // NOTE: this will cause links to behave incorrectly in the following case,
-    //       when an amount of `[` is exactly equal to `maxNesting + 1`:
-    //
-    //       [[[[[[[[[[[[[[[[[[[[[foo]()
-    //
-    // TODO: remove this workaround when CM standard will allow nested links
-    //       (we can replace it by preventing links from being parsed in
-    //       validation mode)
-    //
-    state.pos = state.posMax;
-  }
 
-  if (!ok) { state.pos++; }
-  cache[pos] = state.pos;
-};
+    return this.inline.output(body);
+  };
 
   /**
    * Parse Current Token
@@ -2037,10 +1224,8 @@ ParserInline.prototype.skipToken = function (state) {
         }
         header += this.renderer.tablerow(cell);
 
-    if (ok) {
-      if (state.pos >= end) { break; }
-      continue;
-    }
+        for (i = 0; i < this.token.cells.length; i++) {
+          row = this.token.cells[i];
 
           cell = '';
           for (j = 0; j < row.length; j++) {
@@ -2124,8 +1309,13 @@ ParserInline.prototype.skipToken = function (state) {
     }
   };
 
-ParserInline.prototype.State = require('./rules_inline/state_inline');
+  /**
+   * Slugger generates header id
+   */
 
+  function Slugger() {
+    this.seen = {};
+  }
 
   /**
    * Convert string to unique id
@@ -2165,7 +1355,8 @@ ParserInline.prototype.State = require('./rules_inline/state_inline');
       }
     }
 
-'use strict';
+    return html;
+  }
 
   escape.escapeTest = /[&<>"']/;
   escape.escapeReplace = /[&<>"']/g;
@@ -2262,50 +1453,28 @@ ParserInline.prototype.State = require('./rules_inline/state_inline');
       return base + href;
     }
   }
-};
+  var baseUrls = {};
+  var originIndependentUrl = /^$|^[a-z][a-z0-9+.-]*:|^[?#]/i;
 
   function noop() { }
   noop.exec = noop;
 
-'use strict';
+  function merge(obj) {
+    var i = 1,
+      target,
+      key;
 
+    for (; i < arguments.length; i++) {
+      target = arguments[i];
+      for (key in target) {
+        if (Object.prototype.hasOwnProperty.call(target, key)) {
+          obj[key] = target[key];
+        }
+      }
+    }
 
-module.exports = {
-  options: {
-    html:         false,        // Enable HTML tags in source
-    xhtmlOut:     false,        // Use '/' to close single tags (<br />)
-    breaks:       false,        // Convert '\n' in paragraphs into <br>
-    langPrefix:   'language-',  // CSS language prefix for fenced blocks
-    linkify:      false,        // autoconvert URL-like texts to links
-
-    // Enable some language-neutral replacements + quotes beautification
-    typographer:  false,
-
-    // Double + single quotes replacement pairs, when typographer enabled,
-    // and smartquotes on. Could be either a String or an Array.
-    //
-    // For example, you can use '«»„“' for Russian, '„“‚‘' for German,
-    // and ['«\xA0', '\xA0»', '‹\xA0', '\xA0›'] for French (including nbsp).
-    quotes: '\u201c\u201d\u2018\u2019', /* “”‘’ */
-
-    // Highlighter function. Should return escaped HTML,
-    // or '' if the source string is not changed and should be escaped externaly.
-    // If result starts with <pre... internal wrapper is skipped.
-    //
-    // function (/*str, lang*/) { return ''; }
-    //
-    highlight: null,
-
-    maxNesting:   100            // Internal protection, recursion limit
-  },
-
-  components: {
-
-    core: {},
-    block: {},
-    inline: {}
+    return obj;
   }
-};
 
   function splitCells(tableRow, count) {
     // ensure that every cell-delimiting pipe has a space
@@ -2336,8 +1505,8 @@ module.exports = {
       // leading or trailing whitespace is ignored per the gfm spec
       cells[i] = cells[i].trim().replace(/\\\|/g, '|');
     }
+    return cells;
   }
-};
 
   // Remove trailing 'c's. Equivalent to str.replace(/c*$/, '').
   // /c*$/ is vulnerable to REDOS.
@@ -2347,43 +1516,22 @@ module.exports = {
       return '';
     }
 
+    // Length of suffix matching the invert condition.
+    var suffLen = 0;
 
-var assign          = require('./common/utils').assign;
-var unescapeAll     = require('./common/utils').unescapeAll;
-var escapeHtml      = require('./common/utils').escapeHtml;
+    // Step left until we fail to match the invert condition.
+    while (suffLen < str.length) {
+      var currChar = str.charAt(str.length - suffLen - 1);
+      if (currChar === c && !invert) {
+        suffLen++;
+      } else if (currChar !== c && invert) {
+        suffLen++;
+      } else {
+        break;
+      }
+    }
 
-
-////////////////////////////////////////////////////////////////////////////////
-
-var default_rules = {};
-
-
-default_rules.code_inline = function (tokens, idx, options, env, slf) {
-  var token = tokens[idx];
-
-  return  '<code' + slf.renderAttrs(token) + '>' +
-          escapeHtml(tokens[idx].content) +
-          '</code>';
-};
-
-
-default_rules.code_block = function (tokens, idx, options, env, slf) {
-  var token = tokens[idx];
-
-  return  '<pre' + slf.renderAttrs(token) + '><code>' +
-          escapeHtml(tokens[idx].content) +
-          '</code></pre>\n';
-};
-
-
-default_rules.fence = function (tokens, idx, options, env, slf) {
-  var token = tokens[idx],
-      info = token.info ? unescapeAll(token.info).trim() : '',
-      langName = '',
-      highlighted, i, tmpAttrs, tmpToken;
-
-  if (info) {
-    langName = info.split(/\s+/g)[0];
+    return str.substr(0, str.length - suffLen);
   }
 
   function findClosingBracket(str, b) {
@@ -2432,17 +1580,21 @@ default_rules.fence = function (tokens, idx, options, env, slf) {
         opt = null;
       }
 
-    return  '<pre><code' + slf.renderAttrs(tmpToken) + '>'
-          + highlighted
-          + '</code></pre>\n';
-  }
+      opt = merge({}, marked.defaults, opt || {});
+      checkSanitizeDeprecation(opt);
 
+      var highlight = opt.highlight,
+        tokens,
+        pending,
+        i = 0;
 
-  return  '<pre><code' + slf.renderAttrs(token) + '>'
-        + highlighted
-        + '</code></pre>\n';
-};
+      try {
+        tokens = Lexer.lex(src, opt);
+      } catch (e) {
+        return callback(e);
+      }
 
+      pending = tokens.length;
 
       var done = function (err) {
         if (err) {
@@ -2450,33 +1602,28 @@ default_rules.fence = function (tokens, idx, options, env, slf) {
           return callback(err);
         }
 
-  // "alt" attr MUST be set, even if empty. Because it's mandatory and
-  // should be placed on proper position for tests.
-  //
-  // Replace content with actual value
+        var out;
 
-  token.attrs[token.attrIndex('alt')][1] =
-    slf.renderInlineAsText(token.children, options, env);
+        try {
+          out = Parser.parse(tokens, opt);
+        } catch (e) {
+          err = e;
+        }
 
-  return slf.renderToken(tokens, idx, options);
-};
+        opt.highlight = highlight;
 
         return err
           ? callback(err)
           : callback(null, out);
       };
 
-default_rules.hardbreak = function (tokens, idx, options /*, env */) {
-  return options.xhtmlOut ? '<br />\n' : '<br>\n';
-};
-default_rules.softbreak = function (tokens, idx, options /*, env */) {
-  return options.breaks ? (options.xhtmlOut ? '<br />\n' : '<br>\n') : '\n';
-};
+      if (!highlight || highlight.length < 3) {
+        return done();
+      }
 
+      delete opt.highlight;
 
-default_rules.text = function (tokens, idx /*, options, env */) {
-  return escapeHtml(tokens[idx].content);
-};
+      if (!pending) return done();
 
       for (; i < tokens.length; i++) {
         (function (token) {
@@ -2513,35 +1660,8 @@ default_rules.text = function (tokens, idx /*, options, env */) {
   }
 
   /**
-   * Renderer#rules -> Object
-   *
-   * Contains render rules for tokens. Can be updated and extended.
-   *
-   * ##### Example
-   *
-   * ```javascript
-   * var md = require('markdown-it')();
-   *
-   * md.renderer.rules.strong_open  = function () { return '<b>'; };
-   * md.renderer.rules.strong_close = function () { return '</b>'; };
-   *
-   * var result = md.renderInline(...);
-   * ```
-   *
-   * Each rule is called as independent static function with fixed signature:
-   *
-   * ```javascript
-   * function my_token_render(tokens, idx, options, env, renderer) {
-   *   // ...
-   *   return renderedHTML;
-   * }
-   * ```
-   *
-   * See [source code](https://github.com/markdown-it/markdown-it/blob/master/lib/renderer.js)
-   * for more details and examples.
-   **/
-  this.rules = assign({}, default_rules);
-}
+   * Options
+   */
 
   marked.options =
     marked.setOptions = function (opt) {
@@ -2570,59 +1690,27 @@ default_rules.text = function (tokens, idx /*, options, env */) {
     };
   };
 
-  if (!token.attrs) { return ''; }
+  marked.defaults = marked.getDefaults();
 
-  result = '';
+  /**
+   * Expose
+   */
 
-  for (i = 0, l = token.attrs.length; i < l; i++) {
-    result += ' ' + escapeHtml(token.attrs[i][0]) + '="' + escapeHtml(token.attrs[i][1]) + '"';
-  }
+  marked.Parser = Parser;
+  marked.parser = Parser.parse;
 
-  return result;
-};
+  marked.Renderer = Renderer;
+  marked.TextRenderer = TextRenderer;
 
+  marked.Lexer = Lexer;
+  marked.lexer = Lexer.lex;
 
-/**
- * Renderer.renderToken(tokens, idx, options) -> String
- * - tokens (Array): list of tokens
- * - idx (Numbed): token index to render
- * - options (Object): params of parser instance
- *
- * Default token renderer. Can be overriden by custom function
- * in [[Renderer#rules]].
- **/
-Renderer.prototype.renderToken = function renderToken(tokens, idx, options) {
-  var nextToken,
-      result = '',
-      needLf = false,
-      token = tokens[idx];
+  marked.InlineLexer = InlineLexer;
+  marked.inlineLexer = InlineLexer.output;
 
-  // Tight list paragraphs
-  if (token.hidden) {
-    return '';
-  }
+  marked.Slugger = Slugger;
 
-  // Insert a newline between hidden paragraph and subsequent opening
-  // block-level tag.
-  //
-  // For example, here we should insert a newline before blockquote:
-  //  - a
-  //    >
-  //
-  if (token.block && token.nesting !== -1 && idx && tokens[idx - 1].hidden) {
-    result += '\n';
-  }
-
-  // Add token name, e.g. `<img`
-  result += (token.nesting === -1 ? '</' : '<') + token.tag;
-
-  // Encode attributes, e.g. `<img src="foo"`
-  result += this.renderAttrs(token);
-
-  // Add a slash for self-closing tags, e.g. `<img src="foo" /`
-  if (token.nesting === 0 && options.xhtmlOut) {
-    result += ' /';
-  }
+  marked.parse = marked;
 
   if (typeof module !== 'undefined' && typeof exports === 'object') {
     module.exports = marked;

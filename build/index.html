@@ -24,19 +24,32 @@
     const wisp_chart = new WispChart();
     const wisp_flowchart = new WispFlowChart();
     const wisp_diagram = new WispSequenceDiagram();
-    window.onload = function () {
 
+    window.onload = function () {
       // init header
-      const header = new Wisp("header");
+      const header = new Wisp("header", {
+        inner_link_target: "main"
+      });
 
       // append extensions to header
       wisp_navbar.append(header);
 
       // load header
-      header.load("header.md");
+      header.load("./header.md");
 
       // init main
       const main = new Wisp("main");
+      main.post_content_load_hook(function (id, content) {
+        var h1 = document.querySelectorAll(`#${id} h1`);
+        if (h1.length > 0) {
+          document.title = h1[0].textContent + " | " + document.title;
+        }
+        var link = document.querySelectorAll('a[href^="http"]');
+        for (var i = 0, ln = link.length; i < ln; i++) {
+          link[i].target = "_blank";
+        }
+      });
+
 
       // append extensions to main
       wisp_highlight.append(main);
