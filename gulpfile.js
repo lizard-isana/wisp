@@ -48,7 +48,7 @@ const build_js = function () {
 
 const copy_js = function () {
   return gulp
-    .src(["./src/assets/js/wisp.js", "./src/assets/js/wisp.min.js"])
+    .src(["./src/assets/js/wisp.js", "./src/assets/js/wisp.min.js", "./src/assets/js/default.js"])
     .pipe(gulp.dest("./build/assets/js/"))
     .pipe(gulp.dest("./docs/assets/js/"));
 };
