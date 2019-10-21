@@ -259,6 +259,15 @@ Willo.Wisp = Willo.Wisp || function (id, option) {
             document.getElementById(
               Storage.element_id
             ).innerHTML = marked_page_content;
+
+            var loaded_content = document.getElementById(Storage.element_id);
+            var link = loaded_content.querySelectorAll("a");
+            for (var i = 0, ln = link.length; i < ln; i++) {
+              var href = link[i].getAttribute("href");
+              if (href.match(/^(?!http(|s))/) && href.match(/^(?!.*(\/|=)).*/)) {
+                link[i].href = "?" + Storage.inner_link_target + "=" + href;
+              }
+            }
           }
           if (Storage.PostContentLoadHook.length > 0) {
             for (const i in Storage.PostContentLoadHook) {
