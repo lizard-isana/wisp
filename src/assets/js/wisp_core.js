@@ -152,8 +152,9 @@ Willo.Wisp = Willo.Wisp || function (id, option) {
     Storage.format = "markdown";
     Storage.permit_query = true;
     Storage.query_path = "./";
-
     Storage.element_id = id;
+    Storage.inner_link_target = id;
+
     if (option) {
       if (option.format) {
         Storage.format = format;
@@ -164,6 +165,9 @@ Willo.Wisp = Willo.Wisp || function (id, option) {
           Storage.query_path = option.query_path;
         }
       }
+      if (option.inner_link_target) {
+        Storage.inner_link_target = option.inner_link_target;
+      };
     }
   };
 
