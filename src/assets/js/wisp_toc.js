@@ -8,7 +8,7 @@ var WispToc = function (obj) {
     for (var i = 0, iTop = str.length; i < iTop; i++) {
       crc = (crc >>> 8) ^ b_table[(crc ^ str.charCodeAt(i)) & 0xFF];
     }
-    return (crc ^ (-1)) >>> 0;
+    return ((crc ^ (-1)) >>> 0).toString(16);
   };
 
   obj.post_content_load_hook(function (id, content) {
@@ -17,7 +17,7 @@ var WispToc = function (obj) {
     toc_str_array.push(`<ul>`)
     for (var i in header_array) {
       if (header_array[i].textContent) {
-        header_array[i].id = crc32(header_array[i].textContent).toString(16);
+        header_array[i].id = crc32(header_array[i].textContent);
         if (header_array[i].tagName == "H2") {
           var str = `<li><a href="#${header_array[i].id}">${header_array[i].textContent}</a></li>`
           toc_str_array.push(str)
