@@ -14,17 +14,37 @@ var WispToc = function (obj) {
   obj.post_content_load_hook(function (id, content) {
     var header_array = document.querySelectorAll(`#${obj.id} h1, h2, h3, h4`)
     var toc_str_array = []
-    toc_str_array.push(`<ul>`)
+    toc_str_array.push(`<h2 class="toc_title">Contents</h2>`)
+    toc_str_array.push(`<ol>`)
+    var header_depth = 2;
     for (var i in header_array) {
       if (header_array[i].textContent) {
         header_array[i].id = crc32(header_array[i].textContent);
         if (header_array[i].tagName == "H2") {
-          var str = `<li><a href="#${header_array[i].id}">${header_array[i].textContent}</a></li>`
+          var depth = 2;
+          if (depth < header_depth) {
+            toc_str_array.push("</ol></li>")
+          }
+          var str = `<li><a href="#${header_array[i].id}">${header_array[i].textContent}</a>`
+          if (depth == header_depth) {
+            str = str + '</li>'
+          }
+          toc_str_array.push(str)
+        } else if (header_array[i].tagName == "H3") {
+          var depth = 3;
+          if (depth > header_depth) {
+            toc_str_array.push("<ol>")
+          }
+          var str = `<li><a href="#${header_array[i].id}">${header_array[i].textContent}</a>`
+          if (depth == header_depth) {
+            str = str + '</li>'
+          }
           toc_str_array.push(str)
         }
       }
+      header_depth = depth;
     }
-    toc_str_array.push(`</ul>`)
+    toc_str_array.push(`</ol>`)
     var toc = toc_str_array.join("\n")
     obj.toc = toc
   })
@@ -34,7 +54,7 @@ var WispToc = function (obj) {
 WispToc.prototype = {
   append: function (obj) {
     obj.toc_owner = this.owner
-    obj.post_page_load_hook(function () {
+    obj.post_content_load_hook(function () {
       const toc_array = document.getElementById(obj.id).getElementsByClassName("toc");
       for (const i in toc_array) {
         toc_array[i].innerHTML = obj.toc_owner.toc;
