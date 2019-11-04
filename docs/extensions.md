@@ -181,8 +181,8 @@ $$ M = E-\epsilon \sin E \tag{4}$$
 
 ## WispChart (wisp_chart.js)
 
-chart.jsによるチャートの表示。
-cf. [chart.js](https://www.chartjs.org)
+c3.jsによるチャートの表示。
+cf. [c3.js](https://c3js.org/)
 
 なお、データの中身はValidなJSONである必要があります（たとえば、値はシングルクオートではなくダブルクオートで囲まれていなければなりません）。エラーになる場合（何も表示されない場合）は、 [JSONLint](https://jsonlint.com/)などで、データをチェックしてみてください。
 cf. [JSONLint - The JSON Validator](https://jsonlint.com/)
@@ -190,39 +190,11 @@ cf. [JSONLint - The JSON Validator](https://jsonlint.com/)
 ### 例
     ```chart
     {
-        "type": "bar",
         "data": {
-            "labels": ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-            "datasets": [{
-                "label": "# of Votes",
-                "data": [12, 19, 3, 5, 2, 3],
-                "backgroundColor": [
-                    "rgba(255, 99, 132, 0.2)",
-                    "rgba(54, 162, 235, 0.2)",
-                    "rgba(255, 206, 86, 0.2)",
-                    "rgba(75, 192, 192, 0.2)",
-                    "rgba(153, 102, 255, 0.2)",
-                    "rgba(255, 159, 64, 0.2)"
-                ],
-                "borderColor": [
-                    "rgba(255, 99, 132, 1)",
-                    "rgba(54, 162, 235, 1)",
-                    "rgba(255, 206, 86, 1)",
-                    "rgba(75, 192, 192, 1)",
-                    "rgba(153, 102, 255, 1)",
-                    "rgba(255, 159, 64, 1)"
-                ],
-                "borderWidth": 1
-            }]
-        },
-        "options": {
-            "scales": {
-                "yAxes": [{
-                    "ticks": {
-                        "beginAtZero": true
-                    }
-                }]
-            }
+        "columns": [
+            ["data1", 30, 200, 100, 400, 150, 250],
+            ["data2", 50, 20, 10, 40, 15, 25]
+        ]
         }
     }
     ```
@@ -230,39 +202,60 @@ cf. [JSONLint - The JSON Validator](https://jsonlint.com/)
 
 ```chart
 {
-    "type": "bar",
     "data": {
-        "labels": ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-        "datasets": [{
-            "label": "# of Votes",
-            "data": [12, 19, 3, 5, 2, 3],
-            "backgroundColor": [
-                "rgba(255, 99, 132, 0.2)",
-                "rgba(54, 162, 235, 0.2)",
-                "rgba(255, 206, 86, 0.2)",
-                "rgba(75, 192, 192, 0.2)",
-                "rgba(153, 102, 255, 0.2)",
-                "rgba(255, 159, 64, 0.2)"
+      "columns": [
+        ["data1", 30, 200, 100, 400, 150, 250],
+        ["data2", 50, 20, 10, 40, 15, 25]
+      ]
+    }
+}
+```
+
+
+    ```chart
+    {
+        data: {
+            columns: [
+                ['data1', 30, 20, 50, 40, 60, 50],
+                ['data2', 200, 130, 90, 240, 130, 220],
+                ['data3', 300, 200, 160, 400, 250, 250],
+                ['data4', 200, 130, 90, 240, 130, 220],
+                ['data5', 130, 120, 150, 140, 160, 150],
+                ['data6', 90, 70, 20, 50, 60, 120],
             ],
-            "borderColor": [
-                "rgba(255, 99, 132, 1)",
-                "rgba(54, 162, 235, 1)",
-                "rgba(255, 206, 86, 1)",
-                "rgba(75, 192, 192, 1)",
-                "rgba(153, 102, 255, 1)",
-                "rgba(255, 159, 64, 1)"
-            ],
-            "borderWidth": 1
-        }]
-    },
-    "options": {
-        "scales": {
-            "yAxes": [{
-                "ticks": {
-                    "beginAtZero": true
-                }
-            }]
+            type: 'bar',
+            types: {
+                data3: 'spline',
+                data4: 'line',
+                data6: 'area',
+            },
+            groups: [
+                ['data1','data2']
+            ]
         }
+    }
+    ```
+
+```chart
+{
+    "data": {
+        "columns": [
+            ["data1", 30, 20, 50, 40, 60, 50],
+            ["data2", 200, 130, 90, 240, 130, 220],
+            ["data3", 300, 200, 160, 400, 250, 250],
+            ["data4", 200, 130, 90, 240, 130, 220],
+            ["data5", 130, 120, 150, 140, 160, 150],
+            ["data6", 90, 70, 20, 50, 60, 120]
+        ],
+        "type": "bar",
+        "types": {
+            "data3": "spline",
+            "data4": "line",
+            "data6": "area"
+        },
+        "groups": [
+            ["data1","data2"]
+        ]
     }
 }
 ```
