@@ -14,7 +14,7 @@ https://github.com/lizard-isana/wisp
 
 ## Copyrights
 Wisp highly depends on below superb libraries.
-- [marked.js]( https://marked.js.org/ ) ([MIT License]( https://github.com/markedjs/marked/blob/master/LICENSE.md ))
+- [markdown-it.js]( https://github.com/markdown-it/markdown-it ) ([MIT License]( https://github.com/markdown-it/markdown-it/blob/master/LICENSE ))
 - [highlight.js]( https://highlightjs.org/ ) ([BSD License]( https://github.com/highlightjs/highlight.js/blob/master/LICENSE ))
 - [MathJax]( https://www.mathjax.org/ ) ([Apache License 2.0]( https://github.com/mathjax/MathJax/blob/master/LICENSE ))
 - [c3.js]( https://c3js.org/ ) ([MIT License]( https://github.com/c3js/c3/blob/master/LICENSE ))

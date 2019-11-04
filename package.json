@@ -29,6 +29,7 @@
     "gulp-concat": "^2.6.1",
     "gulp-rename": "^1.4.0",
     "gulp-uglify": "^3.0.2",
-    "uglify-es": "^3.3.9"
+    "uglify-es": "^3.3.9",
+    "uglify-save-license": "^0.4.1"
   }
 }

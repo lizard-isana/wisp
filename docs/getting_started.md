@@ -9,7 +9,6 @@
 > wisp/
 > index.html ... 表示用の html ファイル
 > header.md ... ヘッダ部分の Markdown ファイル
-> sidebar.md. ... サイドバーの Markdown ファイル
 > index.md ... 本文エリアの Markdown ファイル
 > default.css ... css ファイル
 > js/
@@ -59,7 +58,7 @@ Welcome to Wisp!
 
 ### H3 level header
 
-[Markdown Cheatsheet](./?main=markdown.md)
+[Markdown Cheatsheet](markdown.md)
 
 ```
 

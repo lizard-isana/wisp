@@ -13,7 +13,7 @@ Wisp は Wiki ではありません。指定された HTML の要素内に、Mar
 
 ### サンプル: 最小構成
 
-以下は最小構成の Wisp です。 この例では、`<div id="main"></div>`内に、marked.js でレンダリングされた `index.md` が展開されます。
+以下は最小構成の Wisp です。 この例では、`<div id="main"></div>`内に、markdown-it.js でレンダリングされた `index.md` が展開されます。
 
 ```html
 <!DOCTYPE html>
@@ -142,22 +142,13 @@ var id = "main";
 var main = new Wisp(id, {
   format: "markdown",
   query: true,
-  inner_link_target: id,
-  marked_options: {
-    gfm: true,
-    tables: true,
-    breaks: true,
-    pedantic: false,
-    sanitize: false,
-    smartLists: true,
-    smartypants: false
-  }
+  inner_link_target: id
 });
 ```
 
 ### format
 
-読み込むファイルのフォーマット。`raw`を指定すると、marked.js を通さずに、ファイルの内容をそのまま表示します。デフォルトは`markdown`
+読み込むファイルのフォーマット。`raw`を指定すると、Markdownレンダラを通さずに、ファイルの内容をそのまま表示します。デフォルトは`markdown`
 
 ### query
 
@@ -174,10 +165,6 @@ var header = new Wisp("header", {
 ```
 
 たとえば、上のように指定すると、header 内で`[link](test.md)` と書かれたリンクをクリックすると、 test.md は`main`内に展開されます。
-
-### marked_options
-
-marked.js の初期化オプションを指定します。ここで指定したオプションは marked.js にそのまま渡されます。
 
 ## API
 
