@@ -145,7 +145,9 @@ Willo.Wisp = Willo.Wisp || function (id, option) {
         }
         return code;
       }
-    }).use(markdownitFootnote);
+    })
+      .use(markdownitFootnote)
+      .use(markdownitTaskLists);
 
     Storage.Renderer.linkify.set({ fuzzyLink: false });
 

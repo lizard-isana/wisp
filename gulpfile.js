@@ -12,6 +12,7 @@ const concat_js = function () {
       "./src/assets/js/wisp_core.js",
       "./src/assets/js/vendor/markdown-it.js",
       "./src/assets/js/vendor/markdown-it-footnote.js",
+      "./src/assets/js/vendor/markdown-it-task-lists.js",
       "./src/assets/js/wisp_toc.js",
       "./src/assets/js/wisp_navbar.js",
       "./src/assets/js/wisp_highlight.js",
