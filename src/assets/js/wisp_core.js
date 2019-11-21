@@ -295,6 +295,7 @@ Willo.Wisp = Willo.Wisp || function (id, option) {
     }
   };
   Initialize(option);
+  this.renderer = Storage.Renderer;
 };
 
 Willo.Wisp.prototype = {

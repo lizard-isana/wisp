@@ -174,6 +174,51 @@ h6 {
   border: 1px solid #bbb;
 }
 
+/* main: toc */
+#main .toc {
+  display: inline-block;
+  border: 1px solid #a2a9b1;
+  padding: 10px;
+  margin: auto 10px;
+  min-width: 10em;
+  max-width: 33%;
+  background: #f8f9fa;
+  font-size: 0.9em;
+}
+
+#main .toc h2 {
+  margin: 0.5em auto !important;
+  font-size: 1em;
+  font-weight: 700;
+  border-bottom: none !important;
+}
+
+#main .toc ul {
+  list-style: none;
+  list-style-position: outside;
+  counter-reset: toc;
+  margin: 0.5em auto;
+  padding-left: 0.5em;
+}
+#main .toc ul li {
+  margin: 0 auto;
+  display: table-row;
+  counter-increment: toc;
+}
+
+#main .toc ul li:before {
+  padding-right: 0.25em;
+  display: table-cell;
+  content: counters(toc, ".") ".";
+}
+
+#main .toc::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+
 /* pre, blockquote, code */
 
 pre,

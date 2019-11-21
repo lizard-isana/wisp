@@ -295,6 +295,7 @@ Willo.Wisp = Willo.Wisp || function (id, option) {
     }
   };
   Initialize(option);
+  this.renderer = Storage.Renderer;
 };
 
 Willo.Wisp.prototype = {
@@ -8978,6 +8979,7 @@ module.exports = function footnote_plugin(md) {
     }, {}]
   }, {}, [1])(1)
 });
+
 var WispToc = function (obj) {
 
   var crc32 = function (str) {
@@ -8992,41 +8994,21 @@ var WispToc = function (obj) {
   };
 
   obj.post_content_load_hook(function (id, content) {
-    var header_array = document.querySelectorAll(`#${obj.id} h1, h2, h3, h4`)
+    var header_array = document.querySelectorAll(`#${obj.id} h2, h3`)
     var toc_str_array = []
-    toc_str_array.push(`<h2 class="toc_title">Contents</h2>`)
-    toc_str_array.push(`<ol>`)
-    var header_depth = 2;
+    toc_str_array.push(`## Contents`)
     for (var i in header_array) {
       if (header_array[i].textContent) {
         header_array[i].id = crc32(header_array[i].textContent);
-        if (header_array[i].tagName == "H2") {
-          var depth = 2;
-          if (depth < header_depth) {
-            toc_str_array.push("</ol></li>")
-          }
-          var str = `<li><a href="#${header_array[i].id}">${header_array[i].textContent}</a>`
-          if (depth == header_depth) {
-            str = str + '</li>'
-          }
-          toc_str_array.push(str)
-        } else if (header_array[i].tagName == "H3") {
-          var depth = 3;
-          if (depth > header_depth) {
-            toc_str_array.push("<ol>")
-          }
-          var str = `<li><a href="#${header_array[i].id}">${header_array[i].textContent}</a>`
-          if (depth == header_depth) {
-            str = str + '</li>'
-          }
-          toc_str_array.push(str)
-        }
+        var indent_seeds = "          ";
+        var depth = Number(header_array[i].tagName.slice(1, 2));
+        var indent = indent_seeds.substr(0, (depth - 2) * 2);
+        var str = indent + "- [" + header_array[i].textContent + "](#" + header_array[i].id + ")";
+        toc_str_array.push(str);
       }
-      header_depth = depth;
+      var toc = toc_str_array.join("\n")
+      obj.toc = obj.renderer.render(toc);
     }
-    toc_str_array.push(`</ol>`)
-    var toc = toc_str_array.join("\n")
-    obj.toc = toc
   })
   this.owner = obj;
 }
