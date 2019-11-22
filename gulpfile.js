@@ -9,19 +9,19 @@ const rename = require("gulp-rename");
 const concat_js = function () {
   return gulp
     .src([
-      "./src/assets/js/wisp_core.js",
+      "./src/assets/js/wisp.js",
       "./src/assets/js/vendor/markdown-it.js",
       "./src/assets/js/vendor/markdown-it-footnote.js",
       "./src/assets/js/vendor/markdown-it-task-lists.js",
-      "./src/assets/js/wisp_toc.js",
-      "./src/assets/js/wisp_navbar.js",
-      "./src/assets/js/wisp_highlight.js",
-      "./src/assets/js/wisp_mathjax.js",
-      "./src/assets/js/wisp_chart.js",
-      "./src/assets/js/wisp_flowchart.js",
-      "./src/assets/js/wisp_sequence_diagram.js",
+      "./src/assets/js/plugins/wisp_toc.js",
+      "./src/assets/js/plugins/wisp_navbar.js",
+      "./src/assets/js/plugins/wisp_highlight.js",
+      "./src/assets/js/plugins/wisp_mathjax.js",
+      "./src/assets/js/plugins/wisp_chart.js",
+      "./src/assets/js/plugins/wisp_flowchart.js",
+      "./src/assets/js/plugins/wisp_sequence_diagram.js",
     ])
-    .pipe(concat("wisp.js"))
+    .pipe(concat("all-in-one.js"))
     .pipe(gulp.dest("./src/assets/js/"));
 };
 
@@ -47,22 +47,14 @@ const build_js = function () {
     .pipe(gulp.dest("./src/assets/js/"));
 };
 
-const copy_js = function () {
-  return gulp
-    .src(["./src/assets/js/wisp.js", "./src/assets/js/wisp.min.js", "./src/assets/js/default.js"])
-    .pipe(gulp.dest("./build/assets/js/"))
-    .pipe(gulp.dest("./docs/assets/js/"));
-};
-
-const copy_css = function () {
-  return gulp
-    .src(["./src/assets/css/default.css"])
-    .pipe(gulp.dest("./build/assets/css/"))
-    .pipe(gulp.dest("./docs/assets/css/"));
-};
-
 const copy_files = function () {
-  return gulp.src(["src/*.html", "src/*.md"]).pipe(gulp.dest("build/"));
+  return gulp
+    .src([
+      "src/**"
+    ],
+      { base: 'src' }
+    )
+    .pipe(gulp.dest("build"));
 };
 
-exports.build = gulp.series(concat_js, build_js, copy_js, copy_css, copy_files);
+exports.build = gulp.series(concat_js, build_js, copy_files);

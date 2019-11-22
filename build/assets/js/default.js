@@ -6,7 +6,7 @@ const wisp_chart = new WispChart();
 const wisp_flowchart = new WispFlowChart();
 const wisp_diagram = new WispSequenceDiagram();
 
-window.onload = function () {
+window.addEventListener('load', (event) => {
   // init header
   const header = new Wisp("header");
 
@@ -46,4 +46,4 @@ window.onload = function () {
 
   const footer = new Wisp("footer");
   footer.load("footer.md");
-};
+});
