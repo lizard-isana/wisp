@@ -47,14 +47,25 @@ const build_js = function () {
     .pipe(gulp.dest("./src/assets/js/"));
 };
 
-const copy_files = function () {
-  return gulp
+const copy_files = function (done) {
+  gulp
     .src([
       "src/**"
     ],
       { base: 'src' }
     )
     .pipe(gulp.dest("build"));
+
+  gulp
+    .src([
+      "src/assets/**",
+      "src/*.html"
+    ],
+      { base: 'src' }
+    )
+    .pipe(gulp.dest("docs"));
+  done()
+  return
 };
 
 exports.build = gulp.series(concat_js, build_js, copy_files);
