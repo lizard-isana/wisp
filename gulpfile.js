@@ -9,25 +9,25 @@ const rename = require("gulp-rename");
 const concat_js = function () {
   return gulp
     .src([
-      "./src/assets/js/wisp.js",
-      "./src/assets/js/vendor/markdown-it.js",
-      "./src/assets/js/vendor/markdown-it-footnote.js",
-      "./src/assets/js/vendor/markdown-it-task-lists.js",
-      "./src/assets/js/plugins/wisp_toc.js",
-      "./src/assets/js/plugins/wisp_navbar.js",
-      "./src/assets/js/plugins/wisp_highlight.js",
-      "./src/assets/js/plugins/wisp_mathjax.js",
-      "./src/assets/js/plugins/wisp_chart.js",
-      "./src/assets/js/plugins/wisp_flowchart.js",
-      "./src/assets/js/plugins/wisp_sequence_diagram.js",
+      "./src/lib/js/wisp.js",
+      "./src/lib/js/vendor/markdown-it.js",
+      "./src/lib/js/vendor/markdown-it-footnote.js",
+      "./src/lib/js/vendor/markdown-it-task-lists.js",
+      "./src/lib/js/plugins/wisp_toc.js",
+      "./src/lib/js/plugins/wisp_navbar.js",
+      "./src/lib/js/plugins/wisp_highlight.js",
+      "./src/lib/js/plugins/wisp_mathjax.js",
+      "./src/lib/js/plugins/wisp_chart.js",
+      "./src/lib/js/plugins/wisp_flowchart.js",
+      "./src/lib/js/plugins/wisp_sequence_diagram.js",
     ])
-    .pipe(concat("all-in-one.js"))
-    .pipe(gulp.dest("./src/assets/js/"));
+    .pipe(concat("all.js"))
+    .pipe(gulp.dest("./src/lib/js/"));
 };
 
 const build_js = function () {
   return gulp
-    .src(["./src/assets/js/wisp.js"])
+    .src(["./src/lib/js/wisp.js"])
     .pipe(concat("wisp.js"))
     .pipe(
       babel({
@@ -44,7 +44,7 @@ const build_js = function () {
         extname: ".min.js"
       })
     )
-    .pipe(gulp.dest("./src/assets/js/"));
+    .pipe(gulp.dest("./src/lib/js/"));
 };
 
 const copy_files = function (done) {
@@ -58,7 +58,7 @@ const copy_files = function (done) {
 
   gulp
     .src([
-      "src/assets/**",
+      "src/lib/**",
       "src/*.html"
     ],
       { base: 'src' }
