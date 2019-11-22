@@ -3,9 +3,9 @@
 var Willo = Willo || {};
 
 var scripts = [
-  "./assets/js/vendor/markdown-it.js",
-  "./assets/js/vendor/markdown-it-task-lists.js",
-  "./assets/js/vendor/markdown-it-footnote.js"
+  "./lib/js/vendor/markdown-it.js",
+  "./lib/js/vendor/markdown-it-task-lists.js",
+  "./lib/js/vendor/markdown-it-footnote.js"
 ]
 var len = scripts.length;
 var i = 0;
